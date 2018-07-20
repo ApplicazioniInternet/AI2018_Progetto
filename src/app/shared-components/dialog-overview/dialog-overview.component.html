@@ -1,0 +1,11 @@
+<div class="container-dialog">
+  <h1 mat-dialog-title>Compra Posizioni</h1>
+  <div mat-dialog-content>
+    <p>Posizioni interne all'area selezionata: {{counter}}</p>
+    <p>Confermare acquisto?</p>
+  </div>
+  <div mat-dialog-actions>
+    <button id="dialog-button1" mat-raised-button (click)='onAnnullaClick()'>Annulla</button>
+    <button id="dialog-button2" mat-raised-button (click)='confermaAcquistoPosizioni()'>Conferma</button>
+  </div>
+</div>

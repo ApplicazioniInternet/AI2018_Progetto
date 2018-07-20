@@ -1,0 +1,42 @@
+mat-form-field {
+    font-size: 15px;
+    width: 100%;
+    margin: 10px;
+    min-height: 200px;
+}
+
+textarea {
+    min-height: 200px;
+    background: rgb(221, 221, 221);
+}
+
+li {
+    margin: 10px;
+    list-style: none;
+}
+
+.bg-form-div{
+    align-content: center;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    float: right;
+}
+
+.bg-upload-div{
+    float: left;
+    width: 50%;
+}
+
+@media screen and (max-width: 991px) {
+    .bg-form-div{
+        align-content: center;
+        width: 100%;
+        float: none;
+    }
+
+    .bg-upload-div{
+        float: none;
+        width: 100%;
+    }
+}

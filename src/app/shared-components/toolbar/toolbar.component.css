@@ -1,0 +1,23 @@
+mat-toolbar .row {
+    height: 100%;
+    width: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+mat-toolbar .flex-item {
+    width: 30%;
+}
+
+p {
+    text-align: center;
+}
+
+.mat-icon-button {
+    float: right;
+}

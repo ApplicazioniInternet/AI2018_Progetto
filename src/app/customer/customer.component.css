@@ -1,0 +1,144 @@
+.bg-section-compra{
+    padding: 8px;
+}
+
+.bg-section-carrello{
+    padding: 8px;
+}
+
+.bg-form-tab{
+    align-content: center;
+    width: 100%;
+}
+
+.bg-form-card{
+    align-content: center;
+}
+
+.bg-form-div{
+    align-content: center;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    float: right;
+}
+
+.bg-map-div{
+    float: left;
+    width: 50%;
+}
+
+#menu-item{
+    margin: 4px;
+    align-content: center;
+    text-align: center;
+    vertical-align: baseline;
+}
+
+.bg-bought-card {
+    min-height: 300px;
+}
+
+.bg-map-card {
+    min-height: 600px;
+}
+
+mat-expansion-panel{
+    width: 100%;
+}
+
+.no-positions {
+    width: 100%;
+    display: block;
+    flex-direction: row;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: grey;
+    font-style: italic;
+}
+
+#map-id {
+    height: 500px;
+}
+
+.maps-button {
+    padding: 45px 0 24px 0;
+}
+
+.leaflet-draw-actions {
+    background: white;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.container{
+    padding: 8px;
+}
+
+.container-row {
+    width: 100%;
+}
+
+.container-column {
+    width: 50%;
+    align-content: center;
+}
+
+.container-item {
+    display: inline;
+    margin: 4px;
+}
+
+.remove-position {
+    position: relative;
+    top: 16px;
+    right: 25px;
+}
+
+mat-slider {
+    width: 55%;
+}
+
+.add-remove {
+    margin: 20px;
+}
+
+mat-icon {
+    color: #FFFFFF
+}
+
+.scroll-box {
+    overflow-y: scroll;
+    height: 550px;
+    padding: 1rem
+}
+
+.fab-button {
+    margin: 16px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+mat-form-field {
+    width: 40%;
+}
+
+@media screen and (max-width: 991px) {
+    .bg-form-div{
+        align-content: center;
+        width: 100%;
+        float: none;
+    }
+
+    .bg-map-div{
+        float: none;
+        width: 100%;
+    }
+}

@@ -1,0 +1,159 @@
+<app-toolbar [toolbarTitle]="toolbarTitle"></app-toolbar>
+
+<div class="bg-map-div"> <!-- Inizio della divisione con la mappa -->
+  <mat-card>
+    <mat-card-title>
+      Filtra per data
+    </mat-card-title>
+    <div class="container-row">
+      <mat-form-field style="padding-right: 20px;">
+        <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
+               (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
+               (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="container-row">
+      <button mat-mini-fab
+              matTooltip="Filtra per data"
+              (click)='verifySales()'>
+        <mat-icon style="color: #FFFFFF">search</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-title>
+      Mappa
+    </mat-card-title>
+    <div
+            id="map-id"
+            leaflet
+            leafletDraw
+            (leafletMapReady)="onMapReady($event)"
+            [leafletOptions]="options"
+            [leafletDrawOptions]="drawOptions"
+    >
+    </div>
+  </mat-card>
+</div>
+
+<div class="bg-form-div">
+  <mat-card class="bg-form-card" >
+    <mat-card-title>
+      Acquista Posizioni
+    </mat-card-title>
+    <div class="container scroll-box">
+      <p>Scegli il numero di punti per disegnare un'area</p>
+
+      <div class="container-row">
+        <button mat-mini-fab class="add-remove" (click)='popPositionForms(1)'>
+          <mat-icon>remove</mat-icon>
+        </button>
+
+        <mat-slider
+                thumbLabel
+                id="slider"
+                [displayWith]="formatLabel"
+                tickInterval="1"
+                min="3"
+                max="20"
+                [value]="numberOfVertices"
+                (input)='pitch($event)'
+        ></mat-slider>
+
+        <button mat-mini-fab class="add-remove" (click)='add()'>
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+      <ul>
+        <li *ngFor="let position of positionsForm; let i = index;">
+          <div class="container-row"> <!-- Inizio del container della riga -->
+            <div class="container-item"><!-- Inizio container della singola casella di input -->
+              <mat-form-field appearance="outline">
+                <mat-label>Latitudine vertice #{{i + 1}}</mat-label>
+                <input id="{{i}}-latitude"
+                       matInput
+                       [formControl]="position.group.get('latitude')"
+                       (blur)="checkIfAddNewForm()"
+                       placeholder="Latitudine">
+                <mat-icon matSuffix>place</mat-icon>
+                <mat-error *ngIf="position.group.get('latitude').invalid">{{position.getErrorMessageLatitude()}}</mat-error>
+              </mat-form-field>
+            </div> <!-- Fine container della singola casella di input -->
+            <div class="container-item"> <!-- Inizio container della singola casella di input -->
+              <mat-form-field appearance="outline">
+                <mat-label>Longitudine vertice #{{i + 1}}</mat-label>
+                <input id="{{i}}-longitude"
+                       matInput
+                       [formControl]="position.group.get('longitude')"
+                       placeholder="Longitudine"
+                       (blur)="checkIfAddNewForm()">
+                <mat-icon matSuffix>place</mat-icon>
+                <mat-error *ngIf="position.group.get('longitude').invalid">{{position.getErrorMessageLongitude()}}</mat-error>
+              </mat-form-field>
+            </div> <!-- Fine container della singola casella di input -->
+          </div> <!-- Fine del container della riga -->
+        </li>
+      </ul>
+
+      <button mat-fab
+              class="fab-button"
+              matTooltip="Compra posizioni dentro questa area"
+              (click)='submit()'>
+        <mat-icon>done</mat-icon>
+      </button>
+
+      <button mat-fab
+              class="fab-button"
+              matTooltip="Seleziona quest'area sulla mappa"
+              (click)='showOnMap()'>
+        <mat-icon>maps</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card class="bg-bought-card" >
+    <mat-card-title>
+      Posizioni acquistate
+    </mat-card-title>
+    <div class="container">
+      <h2 class="no-positions" *ngIf="positionsBought.length === 0">
+        Nessuna posizione acquistata.
+      </h2>
+      <ul id="no-bullet-ul">
+        <mat-accordion>
+          <li
+                  *ngFor="let position of positionsBought"
+          >
+            <mat-expansion-panel
+                    [expanded]="false"
+                    (opened)="panelOpenState = true"
+                    (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Posizione: {{position.id}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{panelOpenState ?  'Clicca per chiudere i dettagli della posizione' : 'Clicca per vedere i dettagli della posizione'}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <p><span>Latitudine: </span>{{position.latitude}}</p>
+              <p><span>Longitudine: </span>{{position.longitude}}</p>
+              <p><span>Date: </span>{{getDate(position.timestamp)}}</p>
+            </mat-expansion-panel>
+          </li>
+        </mat-accordion>
+      </ul>
+    </div>
+  </mat-card>
+</div>
