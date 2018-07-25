@@ -1,4 +1,3 @@
-<app-toolbar [toolbarTitle]="toolbarTitle"></app-toolbar>
 <mat-card class="bg-form-card" >
   <mat-card-title>Inserisci credenziali</mat-card-title>
   <div class="container">
@@ -7,7 +6,7 @@
               matInput
               placeholder="Username"
               [formControl]="requiredUsernameFormControl"
-              (keyup.enter)="login()"
+              (keyup.enter)="register()"
               required>
       <mat-error *ngIf="requiredUsernameFormControl.invalid">{{getErrorMessageUsername()}}</mat-error>
     </mat-form-field>
@@ -17,7 +16,7 @@
               placeholder="Password"
               [type]="hide ? 'password' : 'text'"
               [formControl]="requiredPasswordFormControl"
-              (keyup.enter)="login()"
+              (keyup.enter)="register()"
               required>
       <mat-icon
               matSuffix
@@ -32,7 +31,7 @@
               placeholder="Conferma Password"
               [type]="hide ? 'password' : 'text'"
               [formControl]="requiredPasswordConfirmFormControl"
-              (keyup.enter)="login()"
+              (keyup.enter)="register()"
               required>
       <mat-icon
               matSuffix

@@ -23,6 +23,29 @@ export class AuthorizationService {
       return !this.jwtHelper.isTokenExpired(token);
   }
 
+  register(loginData) {
+    const params = new HttpParams()
+      .set('username', loginData.username)
+      .set('password', loginData.password)
+      .set('passwordConfirm', loginData.passwordConfirm);
+
+    const headersValue = new HttpHeaders()
+      .append('Content-type', 'application/x-www-form-urlencoded');
+
+    const httpOptions = {
+      headers: headersValue
+    };
+
+    this._http.post('http://localhost:8080/register', params.toString(), httpOptions)
+      .subscribe(
+        () => {
+          this.obtainAccessToken(loginData);
+        },
+        err => {
+          this.openSnackBar(err.error, 'OK');
+        });
+  }
+
   obtainAccessToken(loginData) {
       const params = new HttpParams()
           .set('username', loginData.username)
@@ -45,7 +68,6 @@ export class AuthorizationService {
               },
               err => {
                   this.openSnackBar('Login fallito', 'OK');
-                  console.log(err);
               });
   }
 
@@ -66,40 +88,21 @@ export class AuthorizationService {
         .subscribe(
             data => {
                 this.saveToken(data);
-                this.redirect();
+                this._router.navigate(['/login']);
             },
             err => {
                 this.openSnackBar('Login fallito', 'OK');
             });
-}
+  }
 
   saveToken(token) {
-      let role;
       const expireDate = new Date().getTime() + (1000 * token.expires_in);
 
-      switch (token.authorities) {
-          case 'ROLE_USER':
-              role = '/user';
-              break;
-          case 'ROLE_ADMIN':
-              role = '/admin';
-              break;
-          case 'ROLE_CUSTOMER':
-              role = '/customer';
-              break;
-          default:
-              break;
-      }
-
       localStorage.setItem('access_token', token.access_token);
-      localStorage.setItem('access_role', role);
       localStorage.setItem('access_token_expire', expireDate.toString());
       localStorage.setItem('refresh_token', token.refresh_token);
   }
 
-  roleGetter(): string {
-      return localStorage.getItem('access_role');
-  }
 
   logout(): void {
       localStorage.removeItem('access_token');
@@ -112,36 +115,8 @@ export class AuthorizationService {
       });
   }
 
-  isAuthorized(uri: string) {
-    return uri === this.roleGetter();
-  }
-
   redirect() {
-    const commands = [];
-    commands.push(this.roleGetter());
-    this._router.navigate(commands);
+    this._router.navigate(['/user']);
   }
 
-  register(loginData) {
-    const params = new HttpParams()
-      .set('username', loginData.username)
-      .set('password', loginData.password)
-      .set('passwordConfirm', loginData.passwordConfirm);
-
-    const headersValue = new HttpHeaders()
-      .append('Content-type', 'application/x-www-form-urlencoded');
-
-    const httpOptions = {
-      headers: headersValue
-    };
-
-    this._http.post('http://localhost:8080/register', params.toString(), httpOptions)
-      .subscribe(
-        data => {
-          this.obtainAccessToken(loginData);
-        },
-        err => {
-          this.openSnackBar(err.error, 'OK');
-        });
-  }
 }

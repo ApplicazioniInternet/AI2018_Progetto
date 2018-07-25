@@ -1,1 +1,48 @@
-<router-outlet></router-outlet>
+<div class="container" [class.is-mobile]="mobileQuery.matches">
+
+    <mat-toolbar color="primary"> <!-- Inizio della toolbar -->
+        <div class="row">
+            <div class="flex-item">
+                <button class="menu-button" mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+            </div>
+
+            <div class="flex-item">
+                <h1 class="app-name">Mobile Data Marketplace</h1>
+            </div>
+
+            <div class="flex-item">
+                <button mat-icon-button
+                        matTooltip='Logout'
+                        (click)='logout()'
+                        routerLink="/"
+                        *ngIf="loggedIn">
+                    <mat-icon>power_settings_new</mat-icon>
+                </button>
+            </div>
+        </div>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list>
+                <div *ngIf="loggedIn">
+                    <a mat-list-item routerLink="/user" >User</a>
+                    <a mat-list-item routerLink="/customer" >Customer</a>
+                    <a mat-list-item routerLink="/admin" >Admin</a>
+                </div>
+                <div *ngIf="!loggedIn">
+                    <a mat-list-item routerLink="/login" >Login</a>
+                    <a mat-list-item routerLink="/register" >Register</a>
+                </div>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
+</div>
