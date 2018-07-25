@@ -42,7 +42,7 @@ export class AuthorizationService {
           this.obtainAccessToken(loginData);
         },
         err => {
-          this.openSnackBar(err.error, 'OK');
+          this.openSnackBar(err.error.message, 'OK');
         });
   }
 
