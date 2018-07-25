@@ -23,11 +23,15 @@ import { ToolbarComponent } from './shared-components/toolbar/toolbar.component'
 import { UpdateFileComponent } from './shared-components/update-file/update-file.component';
 import { AuthGuardService } from './authorization/auth-guard.service';
 import {TokenInterceptor} from './authorization/token.interceptor';
+import { RegisterComponent } from './authorization/register/register.component';
 
 const appRoutes: Routes = [
     { path: 'user', component: UserComponent, canActivate: [AuthGuardService] },
     { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService] },
     { path: 'customer', component: CustomerComponent, canActivate: [AuthGuardService] },
+    { path: 'register', component: RegisterComponent },
+    { path: 'login', component: LoginComponent },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', component: LoginComponent }
 ];
 
@@ -46,6 +50,7 @@ export function tokenGetter() {
     DialogOverviewComponent,
     ToolbarComponent,
     UpdateFileComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

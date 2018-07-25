@@ -70,7 +70,6 @@ export class AuthorizationService {
             },
             err => {
                 this.openSnackBar('Login fallito', 'OK');
-                console.log(err);
             });
 }
 
@@ -121,5 +120,28 @@ export class AuthorizationService {
     const commands = [];
     commands.push(this.roleGetter());
     this._router.navigate(commands);
+  }
+
+  register(loginData) {
+    const params = new HttpParams()
+      .set('username', loginData.username)
+      .set('password', loginData.password)
+      .set('passwordConfirm', loginData.passwordConfirm);
+
+    const headersValue = new HttpHeaders()
+      .append('Content-type', 'application/x-www-form-urlencoded');
+
+    const httpOptions = {
+      headers: headersValue
+    };
+
+    this._http.post('http://localhost:8080/register', params.toString(), httpOptions)
+      .subscribe(
+        data => {
+          this.obtainAccessToken(loginData);
+        },
+        err => {
+          this.openSnackBar(err.error, 'OK');
+        });
   }
 }
