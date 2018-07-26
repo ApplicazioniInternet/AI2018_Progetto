@@ -116,7 +116,7 @@ export class AuthorizationService {
   }
 
   redirect() {
-    this._router.navigate(['/user']);
+    this._router.navigate(['/manage']);
   }
 
 }

@@ -17,15 +17,34 @@
 
 .bg-form-div{
     align-content: center;
-    width: 50%;
-    height: 100%;
+    width: 49%;
     overflow: hidden;
     float: right;
 }
 
+body th.mat-header-cell {
+    text-align: center;
+}
+
+mat-list {
+    max-height: 160px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+mat-list-item {
+
+}
+
+a {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
 .bg-map-div{
     float: left;
-    width: 50%;
+    width: 49%;
 }
 
 #menu-item{
@@ -69,10 +88,6 @@ mat-expansion-panel{
 .leaflet-draw-actions {
     background: white;
     box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-}
-
-.container{
-    padding: 8px;
 }
 
 .container-row {
@@ -140,5 +155,10 @@ mat-form-field {
     .bg-map-div{
         float: none;
         width: 100%;
+    }
+
+    .bg-form-users-div {
+        width: 100%;
+        float: none;
     }
 }

@@ -1,12 +1,13 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FeatureGroup, latLng, latLngBounds, Map, marker, Marker, Polygon, tileLayer, Draw, icon} from 'leaflet';
 import {FormControl} from '@angular/forms';
-import {PositionService} from '../position.service';
-import {Position} from '../position';
+import {PositionService} from '../../position.service';
+import {Position} from '../../position';
 import {MatDatepickerInputEvent, MatDialog, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {PositionForm} from './position-form';
-import {DialogOverviewComponent} from '../shared-components/dialog-overview/dialog-overview.component';
-import {ClientHttpService} from '../client-http.service';
+import {DialogOverviewComponent} from '../../shared-components/dialog-overview/dialog-overview.component';
+import {ClientHttpService} from '../../client-http.service';
+import {User} from '../../user';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -16,15 +17,16 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 
 @Component({
   selector: 'app-customer',
-  templateUrl: './customer.component.html',
-  styleUrls: ['./customer.component.css'],
+  templateUrl: './buy.component.html',
+  styleUrls: ['./buy.component.css'],
   providers: [
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomerComponent implements OnInit {
-  toolbarTitle = 'Customer';
+export class BuyComponent implements OnInit {
+  title = 'Manage';
+  users: User[];
 
   // from service
   ICON_URL_RED = '../assets/images/marker-icon-red.png';
@@ -62,6 +64,10 @@ export class CustomerComponent implements OnInit {
               public dialog: MatDialog, private client: ClientHttpService) {}
 
   ngOnInit() {
+
+    this.client.getUsers().subscribe(
+      data => this.users = data
+    );
 
     // Marker per le posizioni degli utenti che sono sulla mappa
     this.markerIconRed = icon({

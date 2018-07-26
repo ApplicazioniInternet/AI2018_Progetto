@@ -1,0 +1,84 @@
+<div class="bg-upload-div">
+  <mat-card class="bg-form-card" >
+
+    <mat-card-title>
+      Carica le posizioni
+    </mat-card-title>
+
+    <mat-form-field id="textarea">
+      <mat-label>Inserisci le posizioni in formato json</mat-label>
+      <textarea
+              matInput
+              [formControl]="textareaForm"
+              placeholder='ESEMPIO
+&#123;
+    "positions": [
+        &#123;
+            "location":
+                &#123;
+                    "type": "Point",
+                    "coordinates": [17.5204200, 75.0326800]
+                &#125;,
+            "timestamp": "1526766939"
+        &#125;,
+        &#123;
+            "location":
+                &#123;
+                    "type": "Point",
+                    "coordinates": [17.5204200, 75.0326800]
+                &#125;,
+            "timestamp": "1526766939"
+        &#125;
+    ]
+&#125;'
+      >
+    </textarea>
+    </mat-form-field>
+
+    <mat-card-content>
+      <h3>Formato</h3>
+      <p>&#123;"positions":[&#123;"location":&#123; "type": "Point","coordinates": [x, y]&#125;,"timestamp": "z"&#125;]&#125;</p>
+      <h3>Vincoli</h3>
+      <p>long: [-90,90], lat: [-180,180], timestamp: 10 digits</p>
+    </mat-card-content>
+
+    <button mat-fab
+            class="fab-button"
+            matTooltip="Upload posizioni"
+            (click)='submit()'>
+      <mat-icon>done</mat-icon>
+    </button>
+
+  </mat-card>
+</div>
+
+<div class="bg-form-div" >
+  <mat-card class="bg-card">
+    <mat-card-title>
+      Posizioni utente
+    </mat-card-title>
+    <ul class="no-bullet-ul">
+      <mat-accordion>
+        <li *ngFor="let position of positions">
+          <mat-expansion-panel
+                  [expanded]="false"
+                  (opened)="panelOpenState2 = true"
+                  (closed)="panelOpenState2 = false"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Lat: {{position.latitude}} Long: {{position.longitude}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p><span>Id Posizione: </span>{{position.id}}</p>
+            <p><span>Date: </span>{{getDate(position.timestamp*1000)}}</p>
+          </mat-expansion-panel>
+        </li>
+      </mat-accordion>
+    </ul>
+
+    <h2 class="no-positions" *ngIf="(positions === undefined || positions.length === 0)">
+      Nessuna posizione inserita.
+    </h2>
+  </mat-card>
+</div>

@@ -8,28 +8,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { FormsModule } from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { CustomerComponent } from './customer/customer.component';
-import { AdminComponent } from './admin/admin.component';
-import { UserComponent } from './user/user.component';
+import { BuyComponent } from './user/buy/buy.component';
 import { LoginComponent } from './authorization/login/login.component';
 
 import { RouterModule, Routes } from '@angular/router';
 import { DialogOverviewComponent } from './shared-components/dialog-overview/dialog-overview.component';
 import { UpdateFileComponent } from './shared-components/update-file/update-file.component';
 import { AuthGuardService } from './authorization/auth-guard.service';
-import {TokenInterceptor} from './authorization/token.interceptor';
+import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
+import { ManageComponent } from './user/manage/manage.component';
 
 const appRoutes: Routes = [
-    { path: 'user', component: UserComponent, canActivate: [AuthGuardService] },
-    { path: 'admin', component: AdminComponent, canActivate: [AuthGuardService] },
-    { path: 'customer', component: CustomerComponent, canActivate: [AuthGuardService] },
-    { path: 'register', component: RegisterComponent },
+    { path: 'manage', component: ManageComponent, canActivate: [AuthGuardService] },
+    { path: 'buy', component: BuyComponent, canActivate: [AuthGuardService] },
     { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', component: LoginComponent }
 ];
@@ -42,13 +40,12 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     DialogOverviewComponent,
-    CustomerComponent,
-    AdminComponent,
-    UserComponent,
+    BuyComponent,
     LoginComponent,
     DialogOverviewComponent,
     UpdateFileComponent,
     RegisterComponent,
+    ManageComponent,
   ],
   imports: [
     BrowserModule,

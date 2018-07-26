@@ -10,6 +10,10 @@ textarea {
     background: rgb(221, 221, 221);
 }
 
+ul {
+    padding-left: 0;
+}
+
 li {
     margin: 10px;
     list-style: none;
@@ -17,7 +21,7 @@ li {
 
 .bg-form-div{
     align-content: center;
-    width: 50%;
+    width: 49%;
     height: 100%;
     overflow: hidden;
     float: right;
@@ -25,7 +29,7 @@ li {
 
 .bg-upload-div{
     float: left;
-    width: 50%;
+    width: 49%;
 }
 
 @media screen and (max-width: 991px) {

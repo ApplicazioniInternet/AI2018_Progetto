@@ -28,9 +28,8 @@
                      [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
             <mat-nav-list>
                 <div *ngIf="loggedIn">
-                    <a mat-list-item routerLink="/user" >User</a>
-                    <a mat-list-item routerLink="/customer" >Customer</a>
-                    <a mat-list-item routerLink="/admin" >Admin</a>
+                    <a mat-list-item routerLink="/manage" >Manage</a>
+                    <a mat-list-item routerLink="/buy" >Buy</a>
                 </div>
                 <div *ngIf="!loggedIn">
                     <a mat-list-item routerLink="/login" >Login</a>

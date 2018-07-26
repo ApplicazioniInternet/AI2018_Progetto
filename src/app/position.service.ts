@@ -3,7 +3,7 @@ import { ClientHttpService } from './client-http.service';
 import {icon, latLng, marker, Marker, Polygon} from 'leaflet';
 import { Observable } from 'rxjs';
 import { Position } from './position';
-import { PositionForm } from './customer/position-form';
+import { PositionForm } from './user/buy/position-form';
 
 @Injectable({
   providedIn: 'root'
