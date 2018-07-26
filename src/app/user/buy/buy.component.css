@@ -54,27 +54,12 @@ a {
     vertical-align: baseline;
 }
 
-.bg-bought-card {
-    min-height: 300px;
-}
-
 .bg-map-card {
     min-height: 600px;
 }
 
 mat-expansion-panel{
     width: 100%;
-}
-
-.no-positions {
-    width: 100%;
-    display: block;
-    flex-direction: row;
-    align-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    color: grey;
-    font-style: italic;
 }
 
 #map-id {
@@ -112,10 +97,6 @@ mat-expansion-panel{
 
 mat-slider {
     width: 55%;
-}
-
-.add-remove {
-    margin: 20px;
 }
 
 mat-icon {

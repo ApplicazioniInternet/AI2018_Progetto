@@ -13,6 +13,7 @@ export class ManageComponent implements OnInit {
   title = 'Manage';
   textareaForm = new FormControl();
   positions: Position[];
+  positionsBought: Position[];
   constructor(private client: ClientHttpService, private snackBar: MatSnackBar ) { }
 
   ngOnInit() {

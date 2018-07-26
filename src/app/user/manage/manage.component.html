@@ -57,28 +57,67 @@
     <mat-card-title>
       Posizioni utente
     </mat-card-title>
-    <ul class="no-bullet-ul">
-      <mat-accordion>
-        <li *ngFor="let position of positions">
-          <mat-expansion-panel
-                  [expanded]="false"
-                  (opened)="panelOpenState2 = true"
-                  (closed)="panelOpenState2 = false"
-          >
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Lat: {{position.latitude}} Long: {{position.longitude}}
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <p><span>Id Posizione: </span>{{position.id}}</p>
-            <p><span>Date: </span>{{getDate(position.timestamp*1000)}}</p>
-          </mat-expansion-panel>
-        </li>
-      </mat-accordion>
-    </ul>
+    <div class="container">
+      <ul class="no-bullet-ul">
+        <mat-accordion>
+          <li *ngFor="let position of positions">
+            <mat-expansion-panel
+                    [expanded]="false"
+                    (opened)="panelOpenState2 = true"
+                    (closed)="panelOpenState2 = false"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Lat: {{position.latitude}} Long: {{position.longitude}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <p><span>Id Posizione: </span>{{position.id}}</p>
+              <p><span>Date: </span>{{getDate(position.timestamp*1000)}}</p>
+            </mat-expansion-panel>
+          </li>
+        </mat-accordion>
+      </ul>
+      <h2 class="no-positions" *ngIf="(positions === undefined || positions.length === 0 )">
+        Nessuna posizione caricata.
+      </h2>
 
-    <h2 class="no-positions" *ngIf="(positions === undefined || positions.length === 0)">
-      Nessuna posizione inserita.
-    </h2>
+    </div>
+  </mat-card>
+
+  <mat-card class="bg-bought-card" >
+    <mat-card-title>
+      Posizioni acquistate
+    </mat-card-title>
+    <div class="container">
+      <ul id="no-bullet-ul">
+        <mat-accordion>
+          <li
+                  *ngFor="let position of positionsBought"
+          >
+            <mat-expansion-panel
+                    [expanded]="false"
+                    (opened)="panelOpenState = true"
+                    (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Posizione: {{position.id}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{panelOpenState ?  'Clicca per chiudere i dettagli della posizione' : 'Clicca per vedere i dettagli della posizione'}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <p><span>Latitudine: </span>{{position.latitude}}</p>
+              <p><span>Longitudine: </span>{{position.longitude}}</p>
+              <p><span>Date: </span>{{getDate(position.timestamp)}}</p>
+            </mat-expansion-panel>
+          </li>
+        </mat-accordion>
+      </ul>
+
+      <h2 class="no-positions" *ngIf="(positionsBought === undefined || positionsBought.length === 0)">
+        Nessuna posizione acquistata.
+      </h2>
+    </div>
   </mat-card>
 </div>
