@@ -10,7 +10,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  toolbarTitle = 'Login';
   hide = true;
   requiredUsernameFormControl = new FormControl('', [Validators.required]);
   requiredPasswordFormControl = new FormControl('', [Validators.required]);

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {User} from './user';
 import {Position} from './position';
+import {Archive} from './archive';
 
 @Injectable({
   providedIn: 'root'
@@ -13,41 +14,39 @@ export class ClientHttpService {
     constructor(private http: HttpClient) {}
 
     /**
+    * Funzione per prendere tute le posizioni acquistate dal customer loggato
+    */
+    getArchivesBought(id: string): Observable<Archive[]> {
+        return this.http.get<Archive[]>(this.path + '/secured/archives/purchased/user/' + id, {});
+    }
+
+    /**
+    * Funzione per prendere tutte le posizioni caricate dallo user loggato
+    */
+    getUserArchives(id: string): Observable<Archive[]> {
+        return this.http.get<Archive[]>(this.path + '/secured/archives/uploaded/user/' + id );
+    }
+
+    /**
+    * Funzione per caricare le posizioni inserite nella textarea da parte dello use loggato
+    * @param textarea = posizioni da caricare
+    */
+    uploadArchives(positionJson: string) {
+        return this.http.post(this.path + '/secured/archives/archive/upload', positionJson, {});
+    }
+
+    /**
      * Funzione per prendere tutte le posizioni caricate sul server per l'admin
      */
-    getPositions(): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/admin/positions');
-    }
+    // getPositions(): Observable<Position[]> {
+    //     return this.http.get<Position[]>(this.path + '/secured/admin/archives');
+    // }
 
     /**
      * Funzione per prendere tutti gli utenti registrati per l'admin
      */
     getUsers(): Observable<User[]> {
-        return this.http.get<User[]>(this.path + '/secured/admin/users');
-    }
-
-    /**
-     * Funzione per prendere tutte le posizioni caricate dallo user con un certo id
-     * @param id = id dello user di interesse
-     */
-    getUsersPositions(id: number): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/admin/users/' + id + '/positions');
-    }
-
-
-    /**
-     * Funzione per prendere tutte le posizioni caricate dallo user loggato
-     */
-    getUserPositions(): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/user/positions');
-    }
-
-    /**
-     * Funzione per caricare le posizioni inserite nella textarea da parte dello use loggato
-     * @param textarea = posizioni da caricare
-     */
-    uploadPositions(textarea: string) {
-        return this.http.post(this.path + '/secured/user/positions', textarea, {});
+        return this.http.get<User[]>(this.path + '/secured/users');
     }
 
     /**
@@ -56,7 +55,7 @@ export class ClientHttpService {
      * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
      * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
      */
-    buyPositions(polygon: Position[], timestampBefore: number, timestampAfter: number): Observable<Position[]> {
+    buyArchives(polygon: Position[], timestampBefore: number, timestampAfter: number): Observable<Archive[]> {
         const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
         longlatArray.push(longlatArray[0]); // Per chiudere il poligono
         const json = {
@@ -67,20 +66,25 @@ export class ClientHttpService {
                 'coordinates': [longlatArray]
             }
         };
-        return this.http.post<Position[]>(this.path + '/secured/customer/positions/buy', json, {});
-    }
-
-    /**
-     * Funzione per prendere tute le posizioni acquistate dal customer loggato
-     */
-    getPositionsBought(): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/customer/positions/purchased', {});
+        return this.http.post<Archive[]>(this.path + '/secured/buy/archives/buy', json, {});
     }
 
     /**
      * Funzione per prendere tutte le posizioni che il customer loggato può comprare
      */
     getBuyablePositions(): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/customer/buyable/positions');
+        return this.http.get<Position[]>(this.path + '/secured/buy/buyable/archives');
     }
+
+  getArchivePositions(id:string) {
+    return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
+  }
+
+  deleteArchive(id: string) {
+    return this.http.delete(this.path + '/secured/archives/archive/' + id + '/delete');
+  }
+
+  downloadArchive(id: string) {
+    return this.http.get(this.path + '/secured/archives/archive/' + id + '/download');
+  }
 }

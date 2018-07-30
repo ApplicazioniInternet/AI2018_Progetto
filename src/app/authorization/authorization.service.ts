@@ -98,6 +98,7 @@ export class AuthorizationService {
   saveToken(token) {
       const expireDate = new Date().getTime() + (1000 * token.expires_in);
 
+      localStorage.setItem('uid', token.uid);
       localStorage.setItem('access_token', token.access_token);
       localStorage.setItem('access_token_expire', expireDate.toString());
       localStorage.setItem('refresh_token', token.refresh_token);

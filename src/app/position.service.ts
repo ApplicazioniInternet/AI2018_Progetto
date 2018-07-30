@@ -22,7 +22,7 @@ export class PositionService {
 
   buyPositionsInArea(polygon: Position[]) {
     this.polygonPositions = polygon;
-    this.client.buyPositions(polygon, this.dateMax, this.dateMin).subscribe(() => {
+    this.client.buyArchives(polygon, this.dateMax, this.dateMin).subscribe(() => {
       this.boughtPositions.emit();
     });
   }

@@ -140,12 +140,12 @@ export class BuyComponent implements OnInit {
       this.positionService.polygonPositions = [];
     });
 
-    // Metto un listener per capire quando devo aggiornare le pos acquistate
-    this.positionService.boughtPositions.subscribe( () => {
-      this.getBoughtPositions();
-    });
-
-    this.getBoughtPositions();
+    // // Metto un listener per capire quando devo aggiornare le pos acquistate
+    // this.positionService.boughtPositions.subscribe( () => {
+    //   this.getBoughtPositions();
+    // });
+    //
+    // this.getBoughtPositions();
 
     // form
     this.initPositionForm();
@@ -485,12 +485,12 @@ export class BuyComponent implements OnInit {
       this.map.fitBounds(this.polygon.getBounds());
     }
   }
-
-  getBoughtPositions(): void {
-    this.client.getPositionsBought().subscribe(positions => {
-      this.positionsBought = positions;
-    });
-  }
+  //
+  // getBoughtPositions(): void {
+  //   this.client.getArchivesBought().subscribe(positions => {
+  //     this.positionsBought = positions;
+  //   });
+  // }
 
   getDate(timestamp: number): string {
     return new Date(timestamp).toLocaleString();

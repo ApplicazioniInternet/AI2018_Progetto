@@ -1,21 +1,38 @@
+.upload-btn-wrapper button {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.filename {
+    max-width: 200px;
+    cursor: pointer;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+}
+
+.bg-upload-div button {
+    margin: 20px;
+}
+
+.upload-btn-wrapper input[type=file] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
 mat-form-field {
     font-size: 15px;
     width: 100%;
     margin: 10px;
-    min-height: 200px;
 }
 
-
-.bg-bought-card {
-    min-height: 300px;
-}
-
-textarea {
-    min-height: 200px;
-    background: rgb(221, 221, 221);
-}
-
-.no-positions {
+.no-archives, .no-positions {
     width: 100%;
     display: block;
     flex-direction: row;
@@ -35,27 +52,52 @@ li {
     list-style: none;
 }
 
-.bg-form-div{
+li a {
+
+}
+
+li.first-level {
+    display: flex;
+    margin: 0;
+}
+
+.archive-exp {
+    justify-items: left;
+    width: 80%;
+    margin-right: 10px;
+}
+
+.delete-archive, .download-archive {
+    padding: 0;
+    margin: 0 auto;
+    justify-items: right;
+}
+
+.bg-archives-div{
     align-content: center;
+    float: left;
     width: 49%;
-    height: 100%;
     overflow: hidden;
+}
+
+.p-archive {
+    padding-right: 10px;
+}
+
+
+.bg-archives-bought-div{
+    align-content: center;
     float: right;
+    width: 49%;
+    overflow: hidden;
 }
 
 .bg-upload-div{
-    float: left;
-    width: 49%;
+    width: 100%;
 }
 
 @media screen and (max-width: 991px) {
-    .bg-form-div{
-        align-content: center;
-        width: 100%;
-        float: none;
-    }
-
-    .bg-upload-div{
+    .bg-archives-div, .bg-archives-bought-div {
         float: none;
         width: 100%;
     }
