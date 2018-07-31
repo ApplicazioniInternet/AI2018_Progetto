@@ -66,15 +66,18 @@ export class AuthorizationService {
                   this.saveToken(data);
                   this.redirect();
               },
-              err => {
+            () => {
                   this.openSnackBar('Login fallito', 'OK');
               });
   }
 
   obtainRefreshToken() {
+
     const params = new HttpParams()
       .set('grant_type', 'refresh_token')
       .set('refresh_token', localStorage.getItem('refresh_token'));
+
+    this.resetLocalStorage();
 
     const headersValue = new HttpHeaders()
         .append('Authorization', 'Basic ' + btoa('client:password'))
@@ -87,11 +90,12 @@ export class AuthorizationService {
     this._http.post('http://localhost:8080/oauth/token', params.toString(), httpOptions)
         .subscribe(
             data => {
-                this.saveToken(data);
-                this._router.navigate(['/login']);
+              this.saveToken(data);
+              this.redirect();
+              this.openSnackBar('Sessione scaduta', 'OK');
             },
-            err => {
-                this.openSnackBar('Login fallito', 'OK');
+          () => {
+              this.openSnackBar('Impossibile recuperare la sessione', 'OK');
             });
   }
 
@@ -107,7 +111,12 @@ export class AuthorizationService {
 
   logout(): void {
       localStorage.removeItem('access_token');
-      localStorage.removeItem('access_role');
+      localStorage.removeItem('uid');
+  }
+
+
+  resetLocalStorage():void {
+      localStorage.clear();
   }
 
   openSnackBar(message: string, action: string) {
