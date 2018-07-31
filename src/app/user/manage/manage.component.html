@@ -53,9 +53,10 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-card>
-                <p>Numero di acquisti da parte di altri utenti: {{positions.length}}</p>
+              <mat-card class="first-mat-card">
+                <p>Numero di acquisti da parte di altri utenti: </p>
               </mat-card>
+
               <mat-card>
                 <p>Gestisci Archivio</p>
                 <button class="delete-archive" mat-button
@@ -71,7 +72,7 @@
               </mat-card>
 
               <mat-card class="position-container">
-                <p>Posizioni presenti nell'archivio: {{positions.length}}</p>
+                <p>Posizioni presenti nell'archivio</p>
                 <ul class="no-bullet-ul">
                   <mat-accordion>
                     <li *ngFor="let position of positions">

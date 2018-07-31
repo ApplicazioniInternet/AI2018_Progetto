@@ -52,6 +52,10 @@ li {
     list-style: none;
 }
 
+.first-mat-card {
+    margin-top: 0;
+}
+
 .delete-archive, .download-archive {
     margin: 10px;
     margin: 0 auto;
