@@ -49,11 +49,29 @@
             >
               <mat-expansion-panel-header (click)='getArchivePositions(archive.id)'>
                 <mat-panel-title>
-                  <p class="p-archive" >Archivio: {{archive.id}}</p>
+                  <p class="p-archive" >Id: {{archive.id}}</p>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <div class="position-container">
+              <mat-card>
+                <p>Numero di acquisti da parte di altri utenti: {{positions.length}}</p>
+              </mat-card>
+              <mat-card>
+                <p>Gestisci Archivio</p>
+                <button class="delete-archive" mat-button
+                        (click)='downloadArchive(archive.id,
+                      "archive_" + archive.id + "_user_" + archive.userId)'
+                        color="primary">
+                  Download
+                </button>
+                <button class="download-archive" mat-button
+                        (click)='deleteArchive(archive.id)' color="accent">
+                  Elimina
+                </button>
+              </mat-card>
+
+              <mat-card class="position-container">
+                <p>Posizioni presenti nell'archivio: {{positions.length}}</p>
                 <ul class="no-bullet-ul">
                   <mat-accordion>
                     <li *ngFor="let position of positions">
@@ -73,7 +91,7 @@
                     </li>
                   </mat-accordion>
                 </ul>
-              </div>
+              </mat-card>
             </mat-expansion-panel>
             <button class="delete-archive" mat-fab
                     (click)='downloadArchive(archive.id,

@@ -48,29 +48,13 @@ ul {
 }
 
 li {
-    margin: 10px;
+    margin: 10px 10px 15px;
     list-style: none;
 }
 
-li a {
-
-}
-
-li.first-level {
-    display: flex;
-    margin: 0;
-}
-
-.archive-exp {
-    justify-items: left;
-    width: 80%;
-    margin-right: 10px;
-}
-
 .delete-archive, .download-archive {
-    padding: 0;
+    margin: 10px;
     margin: 0 auto;
-    justify-items: right;
 }
 
 .bg-archives-div{
