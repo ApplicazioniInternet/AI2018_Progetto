@@ -56,7 +56,7 @@ export class ManageComponent implements OnInit {
           },
           err  => {
             if (err.status === 400) {
-              this.openSnackBar( 'Inseriti dati incorretti', 'OK');
+              this.openSnackBar( err.error.message, 'OK');
             } else {
               this.openSnackBar( 'Errore caricamento posizione', 'OK');
             }

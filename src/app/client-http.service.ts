@@ -76,15 +76,15 @@ export class ClientHttpService {
         return this.http.get<Position[]>(this.path + '/secured/buy/buyable/archives');
     }
 
-  getArchivePositions(id:string) {
-    return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
-  }
+    getArchivePositions(id:string) {
+      return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
+    }
 
-  deleteArchive(id: string) {
-    return this.http.delete(this.path + '/secured/archives/archive/' + id + '/delete');
-  }
+    deleteArchive(id: string) {
+      return this.http.delete(this.path + '/secured/archives/archive/' + id + '/delete');
+    }
 
-  downloadArchive(id: string) {
-    return this.http.get(this.path + '/secured/archives/archive/' + id + '/download');
-  }
+    downloadArchive(id: string) {
+      return this.http.get(this.path + '/secured/archives/archive/' + id + '/download');
+    }
 }
