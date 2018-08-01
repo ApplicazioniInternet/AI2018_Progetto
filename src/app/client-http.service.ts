@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {User} from './user';
 import {Position} from './position';
 import {Archive} from './archive';
+import {LatLng} from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
@@ -72,8 +73,19 @@ export class ClientHttpService {
     /**
      * Funzione per prendere tutte le posizioni che il customer loggato può comprare
      */
-    getBuyablePositions(): Observable<Position[]> {
-        return this.http.get<Position[]>(this.path + '/secured/buy/buyable/archives');
+    getBuyablePositions(polygon: LatLng[], timestampBefore: number, timestampAfter: number): Observable<any> {
+      const longlatArray = polygon.map((x) => [x.lng, x.lat]);
+      longlatArray.push(longlatArray[0]); // Per chiudere il poligono
+      const json = {
+        'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
+        'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
+        'area': {
+          'type': 'Polygon',
+          'coordinates': [longlatArray]
+        }
+      };
+      console.log(json)
+      return this.http.post<any[]>(this.path + '/secured/positions/representations', json, {});
     }
 
     getArchivePositions(id: string) {
