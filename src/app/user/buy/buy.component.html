@@ -1,94 +1,113 @@
-<mat-card>
-  <mat-card-title>
-    Rappresentazione temporale
-  </mat-card-title>
-  <div>
-    <app-graph></app-graph>
-  </div>
-</mat-card>
-
-<mat-card>
-  <mat-card-title>
-    Mappa
-  </mat-card-title>
-  <div 
-    id="map-id" 
-    leaflet 
-    leafletDraw 
-    (leafletMapReady)="onMapReady($event)" 
-    [leafletOptions]="options" 
-    [leafletDrawOptions]="drawOptions"
-  >
-  </div>
-</mat-card>
-
-<div class="container-row">
-  <mat-card id="filter-card">
+<div class="bg-map-div"> <!-- Inizio della divisione con la mappa -->
+  <mat-card>
     <mat-card-title>
       Filtra per data
     </mat-card-title>
-    <div class="container-row-child">
+    <div class="container-row">
       <mat-form-field style="padding-right: 20px;">
-        <input matInput 
-          [matDatepicker]="picker1" 
-          placeholder="Scegli data di inizio" 
-          [formControl]="dateInitMin" 
-          (dateInput)="updateSalesMin($event)"
-          (dateChange)="updateSalesMin($event)"
-        >
+        <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
+               (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
-  
+
       <mat-form-field>
-        <input matInput 
-          [matDatepicker]="picker2" 
-          placeholder="Scegli data di fine" 
-          [formControl]="dateInitMax" 
-          (dateInput)="updateSalesMax($event)"
-          (dateChange)="updateSalesMax($event)"
-        >
+        <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
+               (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="container-row-child">
-      <button mat-mini-fab matTooltip="Filtra per data" (click)='verifySales()'>
+    <div class="container-row">
+      <button mat-mini-fab
+              matTooltip="Filtra per data"
+              (click)='verifySales()'>
         <mat-icon style="color: #FFFFFF">search</mat-icon>
       </button>
     </div>
   </mat-card>
-  
-  <mat-card id="buy-card">
+
+  <mat-card>
+    <mat-card-title>
+      Mappa
+    </mat-card-title>
+    <div
+            id="map-id"
+            leaflet
+            leafletDraw
+            (leafletMapReady)="onMapReady($event)"
+            [leafletOptions]="options"
+            [leafletDrawOptions]="drawOptions"
+    >
+    </div>
+    <div>
+      <p>Ricalcola posizioni nella mappa</p>
+      <button mat-fab
+              class="fab-button"
+              matTooltip="Reset mappa"
+              (click)='getPositionsToBuy()'>
+        <mat-icon>cached</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<div class="bg-form-div">
+
+  <mat-card class="bg-form-card" >
     <mat-card-title>
       Acquista Posizioni
     </mat-card-title>
 
     <div>
-      <p>da mettere il counter qua</p>
+      <h3>Compra posizioni visibili</h3>
+      <p>
+        Schiacciando il bottone, verranno acquistati gli archivi contenenti le posizioni visibili nella mappa (o il sottoinsieme selezionato)
+      </p>
+      <p>Posizioni selezionate: counter qua</p>
       <button mat-fab
               class="fab-button"
-              matTooltip="Compra posizioni dentro questa area"
+              matTooltip="Compra"
               (click)='submit()'>
         <mat-icon>done</mat-icon>
       </button>
     </div>
   </mat-card>
 
-  <mat-card id="users-card">
+  <mat-card class="bg-card">
     <mat-card-title>
       Utenti
     </mat-card-title>
 
-    <mat-list dense>
-      <mat-list-item *ngFor="let user of users">
-        <a>
-          <button mat-button color="accent">
-            {{user.username}}
-          </button>
-        </a>
-      </mat-list-item>
-    </mat-list>
+    <p>
+      Numero utenti selezionati: {{usersList.selectedOptions.selected.length}}
+    </p>
+
+    <mat-selection-list #usersList dense>
+      <mat-list-option *ngFor="let user of users">
+        {{user.id}}
+      </mat-list-option>
+    </mat-selection-list>
+
+    <div>
+      <p>Filtra posizioni degli utenti selezionati</p>
+      <button mat-fab
+              class="fab-button"
+              matTooltip="Filtra"
+              (click)='getPositionsToBuy(usersList.selectedOptions.selected)'>
+        <mat-icon>done</mat-icon>
+      </button>
+    </div>
 
   </mat-card>
+
+  <mat-card>
+    <mat-card-title>
+      Rappresentazione temporale
+    </mat-card-title>
+	<div>
+	  <app-graph></app-graph>
+	</div>
+  </mat-card>
+  
 </div>

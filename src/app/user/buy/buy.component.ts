@@ -39,7 +39,8 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class BuyComponent implements OnInit {
   title = 'Manage';
-  users: User[];
+  users: User[] = [];
+  usersIdRequestList: string[] = [];
 
   ICON_URL_RED = '../assets/images/marker-icon-red.png';
   ICON_URL_BLUE = '../assets/images/marker-icon-blue.png';
@@ -64,8 +65,7 @@ export class BuyComponent implements OnInit {
   dateInitMin = new FormControl(new Date(2018, 4, 25));
   dateInitMax = new FormControl(new Date());
 
-  // position bought
-  positionsBought: Position[] = new Array<Position>();
+
 
   constructor(private positionService: PositionService, public snackBar: MatSnackBar,
               public dialog: MatDialog, private client: ClientHttpService) {}
@@ -160,12 +160,13 @@ export class BuyComponent implements OnInit {
         (pos) => {
           // map
           // Opzioni per il setup iniziale della mappa: dove è centrata, quanto è lo zoom iniziale, il tema del background
-          this.map.setView(latLng(pos.coords.latitude, pos.coords.longitude), 5);
+          this.map.setView(latLng(pos.coords.latitude, pos.coords.longitude), 12);
           this.getPositionsToBuy();
         });
     } else {
       this.getPositionsToBuy();
     }
+
     this.map.on(Draw.Event.CREATED, this.onDrawMap, this);
     this.map.on(Draw.Event.DELETED, this.onDeleteFromMap, this);
   }
@@ -218,11 +219,13 @@ export class BuyComponent implements OnInit {
     if (force === undefined) {
       force = false;
     }
+
     this.map.eachLayer((layer) => {
       if (layer instanceof Marker) {
         const m: Marker = layer;
         if (!this.canBeDeleted(m) || force) {
           this.map.removeLayer(layer);
+          console.log(layer);
         }
       }
 
@@ -299,10 +302,26 @@ export class BuyComponent implements OnInit {
     return new Date(timestamp).toLocaleString();
   }
 
-  private getPositionsToBuy() {
-    this.clearMap();
+  private getPositionsToBuy(usersList?) {
+
+    // remove markers
+    this.map.eachLayer((layer) => {
+      if (layer instanceof Marker) {
+        this.map.removeLayer(layer);
+      }
+    });
+
+    this.users = [];
+    this.usersIdRequestList = [];
     this.markersForSale = [];
     this.positionService.positionsForSale = [];
+
+    // se presente riempo la lista di users richiedere al server
+    if (usersList !== undefined) {
+      usersList.forEach(user => {
+        this.usersIdRequestList.push(user._text.nativeElement.innerText);
+      });
+    }
 
     if (this.boundPositions.length === 0) {
       // creo poligono da vertici mappa
@@ -313,16 +332,30 @@ export class BuyComponent implements OnInit {
       this.boundPositions.push(bounds.getNorthWest()); // top left
     }
 
-    this.client.getBuyablePositions(this.boundPositions, this.dateMax, this.dateMin).subscribe(
+    this.client.getBuyablePositions(this.boundPositions, this.dateMax, this.dateMin, this.usersIdRequestList).subscribe(
       data => {
         data.reprCoordList.forEach(p => {
+          // popolo mappa
           const newMarker = marker(latLng(p.lat, p.lng),
             { icon: this.markerIconRed })
             .bindPopup('<b>Coordinate:</b><br>LatLng(' + p.lat + ', ' + p.lng + ')');
           this.map.addLayer(newMarker);
           this.markersForSale.push(newMarker);
           this.positionService.positionsForSale.push(p);
+          this.boundPositions = [];
+          // inserisco utente nell'array users solo se non c'è già
+          const temp = new User(p.userId);
+          let flag = true;
+          this.users.forEach(user => {
+              if ( user.id === temp.id ) {
+                flag = false;
+              }
+            });
+          if (flag) {
+            this.users.push(temp);
+          }
         });
     });
   }
+
 }

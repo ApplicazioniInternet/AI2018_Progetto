@@ -73,7 +73,7 @@ export class ClientHttpService {
     /**
      * Funzione per prendere tutte le posizioni che il customer loggato può comprare
      */
-    getBuyablePositions(polygon: LatLng[], timestampBefore: number, timestampAfter: number): Observable<any> {
+    getBuyablePositions(polygon: LatLng[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<any> {
       const longlatArray = polygon.map((x) => [x.lng, x.lat]);
       longlatArray.push(longlatArray[0]); // Per chiudere il poligono
       const json = {
@@ -82,9 +82,9 @@ export class ClientHttpService {
         'area': {
           'type': 'Polygon',
           'coordinates': [longlatArray]
-        }
+        },
+        'userIdList' : [usersIdRequestList]
       };
-      console.log(json)
       return this.http.post<any[]>(this.path + '/secured/positions/representations', json, {});
     }
 

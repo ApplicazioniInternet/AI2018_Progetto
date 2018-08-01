@@ -22,6 +22,11 @@
     float: right;
 }
 
+mat-list-option {
+    text-align: left;
+    font-size: 16px;
+}
+
 body th.mat-header-cell {
     text-align: center;
 }
@@ -119,10 +124,6 @@ mat-icon {
     overflow-y: scroll;
     height: 550px;
     padding: 1rem
-}
-
-.fab-button {
-    margin: 16px;
 }
 
 ul {
