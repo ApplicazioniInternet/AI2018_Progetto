@@ -83,7 +83,7 @@ export class ClientHttpService {
           'type': 'Polygon',
           'coordinates': [longlatArray]
         },
-        'userIdList' : [usersIdRequestList]
+        'userIds' : usersIdRequestList
       };
       return this.http.post<any[]>(this.path + '/secured/positions/representations', json, {});
     }
