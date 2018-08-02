@@ -6,6 +6,11 @@
     padding: 8px;
 }
 
+.marker-user {
+    border-radius: 50%;
+    box-shadow: 0 0 5px #363636;
+}
+
 .bg-form-tab{
     align-content: center;
     width: 100%;

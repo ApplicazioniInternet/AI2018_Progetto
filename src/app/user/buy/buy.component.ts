@@ -41,12 +41,13 @@ export class BuyComponent implements OnInit {
   title = 'Manage';
   users: User[] = [];
   usersIdRequestList: string[] = [];
+  colorLetters = '0123456789ABCDEF';
 
-  ICON_URL_RED = '../assets/images/marker-icon-red.png';
+  ICON_URL_EMPTY = '../assets/images/marker-icon-empty.png';
   ICON_URL_BLUE = '../assets/images/marker-icon-blue.png';
   SHADOW_URL = '../assets/images/marker-shadow.png';
 
-  markerIconRed;
+  markerUserEmpty;
   markerIconBlue;
   markersForSale: Marker[] = []; // Posizioni in vendita
   markers: Marker[] = []; // Marker messi nella mappa
@@ -73,12 +74,9 @@ export class BuyComponent implements OnInit {
   ngOnInit() {
 
     // Marker per le posizioni degli utenti che sono sulla mappa
-    this.markerIconRed = icon({
-      iconSize: [25, 41],
-      iconAnchor: [13, 41],
-      popupAnchor: [0, -38],
-      iconUrl: this.ICON_URL_RED,
-      shadowUrl: this.SHADOW_URL
+    this.markerUserEmpty = icon({
+      iconSize: [25, 25],
+      iconUrl: this.ICON_URL_EMPTY
     });
 
     // Marker per i punti che vado ad aggiungere io cliccando sulla mappa
@@ -303,7 +301,8 @@ export class BuyComponent implements OnInit {
   }
 
   private getPositionsToBuy(usersList?) {
-
+    let cssText = '';
+    this.clearMap();
     // remove markers
     this.map.eachLayer((layer) => {
       if (layer instanceof Marker) {
@@ -335,26 +334,40 @@ export class BuyComponent implements OnInit {
     this.client.getBuyablePositions(this.boundPositions, this.dateMax, this.dateMin, this.usersIdRequestList).subscribe(
       data => {
         data.reprCoordList.forEach(p => {
+          // inserisco utente nell'array users solo se non c'è già
+          let temp = new User(p.userId);
+          let flag = true;
+          this.users.forEach(user => {
+            if ( user.id === temp.id ) {
+              temp = user;
+              flag = false;
+            }
+          });
+          if (flag) {
+            temp.markerColor = '';
+            for (let i = 0; i < 6; i++) {
+              temp.markerColor += this.colorLetters[Math.floor(Math.random() * 16)];
+            }
+            this.users.push(temp);
+          }
+          this.markerUserEmpty.options.className = 'marker-user color-' + temp.markerColor;
           // popolo mappa
           const newMarker = marker(latLng(p.lat, p.lng),
-            { icon: this.markerIconRed })
-            .bindPopup('<b>Coordinate:</b><br>LatLng(' + p.lat + ', ' + p.lng + ')');
+            { icon: this.markerUserEmpty })
+            .bindPopup('<b>Coordinate:</b><br>LatLng(' + p.lat + ', ' + p.lng + ')')
+          ;
+          // .getElement().setAttribute('style', 'background-color: ' + temp.markerColor);
           this.map.addLayer(newMarker);
+          cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
           this.markersForSale.push(newMarker);
           this.positionService.positionsForSale.push(p);
           this.boundPositions = [];
-          // inserisco utente nell'array users solo se non c'è già
-          const temp = new User(p.userId);
-          let flag = true;
-          this.users.forEach(user => {
-              if ( user.id === temp.id ) {
-                flag = false;
-              }
-            });
-          if (flag) {
-            this.users.push(temp);
-          }
         });
+        const style: HTMLLinkElement = document.createElement('link');
+        style.setAttribute('rel', 'stylesheet');
+        style.setAttribute('type', 'text/css');
+        style.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(cssText));
+        document.head.appendChild(style);
     });
   }
 
