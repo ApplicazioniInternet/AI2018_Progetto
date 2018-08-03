@@ -32,8 +32,14 @@ mat-list {
     width: 100%;
 }
 
-mat-list-item {
+#users-card, #buy-card {
+    width: 25%;
+    margin: 8px;
+}
 
+#filter-card {
+    width: 50%;
+    margin: 8px;
 }
 
 a {
@@ -76,6 +82,12 @@ mat-expansion-panel{
 }
 
 .container-row {
+    display: flex;
+    text-align:center;
+    width: 100%;
+}
+
+.container-row-child{
     width: 100%;
 }
 

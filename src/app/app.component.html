@@ -28,12 +28,12 @@
                      [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
             <mat-nav-list>
                 <div *ngIf="loggedIn">
-                    <a mat-list-item routerLink="/manage" >Manage</a>
-                    <a mat-list-item routerLink="/buy" >Buy</a>
+                    <a mat-list-item routerLink="/manage" >Organizza</a>
+                    <a mat-list-item routerLink="/buy" >Compra</a>
                 </div>
                 <div *ngIf="!loggedIn">
                     <a mat-list-item routerLink="/login" >Login</a>
-                    <a mat-list-item routerLink="/register" >Register</a>
+                    <a mat-list-item routerLink="/register" >Registrazione</a>
                 </div>
             </mat-nav-list>
         </mat-sidenav>

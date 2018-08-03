@@ -22,6 +22,10 @@ import { AuthGuardService } from './authorization/auth-guard.service';
 import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
 import { ManageComponent } from './user/manage/manage.component';
+import { GraphComponent } from './user/buy/graph/graph.component';
+
+import { jqxChartComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxchart';
+import { jqxDropDownListComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 const appRoutes: Routes = [
     { path: 'manage', component: ManageComponent, canActivate: [AuthGuardService] },
@@ -46,6 +50,9 @@ export function tokenGetter() {
     UpdateFileComponent,
     RegisterComponent,
     ManageComponent,
+    GraphComponent,
+    jqxChartComponent,
+    jqxDropDownListComponent
   ],
   imports: [
     BrowserModule,
