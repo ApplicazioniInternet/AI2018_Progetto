@@ -47,10 +47,9 @@ export class BuyComponent implements OnInit {
   ICON_URL_BLUE = '../assets/images/marker-icon-blue.png';
   SHADOW_URL = '../assets/images/marker-shadow.png';
 
-  positionCount: Observable<number>;
+  positionCount: number;
   markerUserEmpty;
   markerIconBlue;
-  markersForSale: Marker[] = []; // Posizioni in vendita
   markers: Marker[] = []; // Marker messi nella mappa
 
   // map
@@ -203,8 +202,11 @@ export class BuyComponent implements OnInit {
       }
     });
     this.polygon = new Polygon(latlngs, this.shapeOptions);
-    this.positionCount = this.client.countPositions(
-      this.positionService.polygonPositions, this.dateMax, this.dateMin, this.positionService.usersIdRequestList);
+    this.client.countPositions(
+      this.positionService.polygonPositions, this.dateMax, this.dateMin, this.positionService.usersIdRequestList)
+      .subscribe(
+        data => this.positionCount = data
+      );
   }
 
   // Funzione chiamata quando si cancella il disegno dalla mappa
@@ -309,8 +311,6 @@ export class BuyComponent implements OnInit {
     });
 
     this.users = [];
-    this.markersForSale = [];
-    this.positionService.positionsForSale = [];
     this.positionService.polygonPositions = [];
     this.positionService.usersIdRequestList = [];
 
@@ -345,6 +345,7 @@ export class BuyComponent implements OnInit {
       this.positionService.polygonPositions, this.dateMax, this.dateMin,
       this.positionService.usersIdRequestList).subscribe(
       data => {
+        this.positionService.positionsForSale = [];
         data.reprCoordList.forEach(p => {
           // inserisco utente nell'array users solo se non c'è già
           let temp = new User(p.userId);
@@ -371,17 +372,14 @@ export class BuyComponent implements OnInit {
           // .getElement().setAttribute('style', 'background-color: ' + temp.markerColor);
           this.map.addLayer(newMarker);
           cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
-          this.markersForSale.push(newMarker);
           this.positionService.positionsForSale.push(p);
         });
+        this.positionCount = this.positionService.positionsForSale.length;
         const style: HTMLLinkElement = document.createElement('link');
         style.setAttribute('rel', 'stylesheet');
         style.setAttribute('type', 'text/css');
         style.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(cssText));
         document.head.appendChild(style);
-
-        this.positionCount = this.client.countPositions(
-          this.positionService.polygonPositions, this.dateMax, this.dateMin, this.positionService.usersIdRequestList);
     });
   }
 

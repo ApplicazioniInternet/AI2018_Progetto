@@ -56,25 +56,21 @@
 
   <mat-card class="bg-form-card" >
     <mat-card-title>
-      Acquista Posizioni
+      Vai all'acquisto
     </mat-card-title>
 
     <div>
-      <h3>Carrello posizioni visibili</h3>
-      <p>
-        Schiacciando il bottone, verranno visualizzati gli archivi contenenti le posizioni nella mappa (o il sottoinsieme selezionato), per effettuarne l'acquisto
-      </p>
       <p>Posizioni selezionate:
-          <span>{{positionCount | async}}</span>
+          <span>{{positionCount}}</span>
       </p>
 
-      <button mat-fab
-              class="fab-button"
-              matTooltip="Compra"
-              (click)='submit()'>
-        <mat-icon>done</mat-icon>
-      </button>
-    </div>
+      <a routerLink="/checkout">
+        <button color="accent" mat-raised-button
+                matTooltip="Vai all'aquisto">
+          Procedi all'acquisto
+        </button>
+      </a>
+      </div>
   </mat-card>
 
   <mat-card class="bg-card utenti">

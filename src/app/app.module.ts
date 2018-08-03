@@ -22,14 +22,15 @@ import { AuthGuardService } from './authorization/auth-guard.service';
 import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
 import { ManageComponent } from './user/manage/manage.component';
+import { CheckoutComponent } from './user/checkout/checkout.component';
 import { GraphComponent } from './user/buy/graph/graph.component';
-
 import { jqxChartComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxchart';
 import { jqxDropDownListComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 const appRoutes: Routes = [
     { path: 'manage', component: ManageComponent, canActivate: [AuthGuardService] },
     { path: 'buy', component: BuyComponent, canActivate: [AuthGuardService] },
+    { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuardService] },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -52,7 +53,8 @@ export function tokenGetter() {
     ManageComponent,
     GraphComponent,
     jqxChartComponent,
-    jqxDropDownListComponent
+    jqxDropDownListComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
