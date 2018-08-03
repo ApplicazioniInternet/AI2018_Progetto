@@ -42,6 +42,6 @@ export class DialogOverviewComponent implements OnInit {
 
     getListOfArchivesInArea(): Observable<Archive[]> {
       return this.client.listArchives(this.positionService.polygonPositions,
-        this.positionService.dateMax, this.positionService.dateMin, );
+        this.positionService.dateMax, this.positionService.dateMin, this.positionService.usersIdRequestList);
     }
 }
