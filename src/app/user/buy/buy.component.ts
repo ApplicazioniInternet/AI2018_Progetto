@@ -21,6 +21,7 @@ import {MatDatepickerInputEvent, MatDialog, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPT
 import {DialogOverviewComponent} from '../../shared-components/dialog-overview/dialog-overview.component';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
+import {Observable} from 'rxjs';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -40,13 +41,13 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class BuyComponent implements OnInit {
   title = 'Manage';
   users: User[] = [];
-  usersIdRequestList: string[] = [];
   colorLetters = '0123456789ABCDEF';
 
   ICON_URL_EMPTY = '../assets/images/marker-icon-empty.png';
   ICON_URL_BLUE = '../assets/images/marker-icon-blue.png';
   SHADOW_URL = '../assets/images/marker-shadow.png';
 
+  positionCount: Observable<number>;
   markerUserEmpty;
   markerIconBlue;
   markersForSale: Marker[] = []; // Posizioni in vendita
@@ -60,7 +61,6 @@ export class BuyComponent implements OnInit {
   editableLayers;
   map: Map;
   polygon: Polygon = undefined;
-  boundPositions: LatLng[] = [];
   dateMin: number;
   dateMax: number;
   dateInitMin = new FormControl(new Date(2018, 4, 25));
@@ -166,14 +166,19 @@ export class BuyComponent implements OnInit {
     }
 
     this.map.on(Draw.Event.CREATED, this.onDrawMap, this);
+    this.map.on('moveend', this.onZoomMoveMap, this);
+    this.map.on('zoomend', this.onZoomMoveMap, this);
     this.map.on(Draw.Event.DELETED, this.onDeleteFromMap, this);
+  }
+
+  onZoomMoveMap(): void {
+    this.getPositionsToBuy();
   }
 
   // Funzione chiamata quando è terminato il disegno sulla mappa
   onDrawMap(e: any): void {
     // Pulisco tutto prima di iniziare in caso
     this.clearMap();
-    this.positionService.polygonPositions = [];
 
     // Qua volendo si può estendere a disegnare un po'qualsiasi cosa, dai marker ai cerchi
     if (e.layer instanceof Polygon) {
@@ -185,56 +190,50 @@ export class BuyComponent implements OnInit {
   drawPolygon(e: any): void {
     const arrayCoordinates: Array<Array<number>> = e.layer.toGeoJSON().geometry.coordinates;
     const latlngs = [];
+    this.positionService.polygonPositions = [];
     arrayCoordinates[0].forEach((point, index) => {
       if (index !== (arrayCoordinates[0].length - 1)) {
         const latitudeLongitude = latLng(point[1], point[0]); // Sono invertite nel GeoJSON
         const newPosition = new Position();
-        const newMarker = marker(latitudeLongitude, { icon: this.markerIconBlue })
-          .bindPopup('<b>Coordinate:</b><br>' + latitudeLongitude + '');
-        newPosition.latitude = newMarker.getLatLng().lat;
-        newPosition.longitude = newMarker.getLatLng().lng;
+        newPosition.latitude = latitudeLongitude.lat;
+        newPosition.longitude = latitudeLongitude.lng;
 
-        latlngs.push(latLng(newMarker.getLatLng().lat, newMarker.getLatLng().lng));
-        this.map.addLayer(newMarker);
+        latlngs.push(latLng(latitudeLongitude.lat, latitudeLongitude.lng));
         this.positionService.polygonPositions.push(newPosition);
       }
     });
     this.polygon = new Polygon(latlngs, this.shapeOptions);
-    this.map.fitBounds(this.polygon.getBounds());
+    this.positionCount = this.client.countPositions(
+      this.positionService.polygonPositions, this.dateMax, this.dateMin, this.positionService.usersIdRequestList);
   }
 
   // Funzione chiamata quando si cancella il disegno dalla mappa
   onDeleteFromMap(e: any) {
-    if (this.markers.length === 0) {
-      return;
-    }
     this.clearMap();
     this.positionService.polygonPositions = [];
+    // creo poligono da vertici mappa
+    const bounds = this.map.getBounds();
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getSouthWest().lat, bounds.getSouthWest().lng)
+    ); // bottom left
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getSouthEast().lat, bounds.getSouthEast().lng)
+    ); // bottom right
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getNorthEast().lat, bounds.getNorthEast().lng)
+    ); // top right
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getNorthWest().lat, bounds.getNorthWest().lng)
+    ); // top left
   }
 
   // Funzione per pulire la mappa
-  clearMap(force?: boolean): void {
-    if (force === undefined) {
-      force = false;
-    }
-
+  clearMap(): void {
     this.map.eachLayer((layer) => {
-      if (layer instanceof Marker) {
-        const m: Marker = layer;
-        if (!this.canBeDeleted(m) || force) {
-          this.map.removeLayer(layer);
-          console.log(layer);
-        }
-      }
-
       if (layer instanceof Polygon) {
         this.map.removeLayer(layer);
       }
     });
-  }
-
-  canBeDeleted(mark: Marker): boolean {
-    return this.markersForSale.indexOf(mark) !== -1;
   }
 
   updateSalesMin(date: MatDatepickerInputEvent<Date>) {
@@ -252,8 +251,7 @@ export class BuyComponent implements OnInit {
       this.openSnackBar('La data di inizio deve essere minore della data di fine', 'OK');
       return;
     }
-    this.clearMap(true);
-    this.positionService.polygonPositions = [];
+    this.clearMap();
     this.getPositionsToBuy();
   }
 
@@ -311,27 +309,41 @@ export class BuyComponent implements OnInit {
     });
 
     this.users = [];
-    this.usersIdRequestList = [];
     this.markersForSale = [];
     this.positionService.positionsForSale = [];
+    this.positionService.polygonPositions = [];
+    this.positionService.usersIdRequestList = [];
 
     // se presente riempo la lista di users richiedere al server
     if (usersList !== undefined) {
-      usersList.forEach(user => {
-        this.usersIdRequestList.push(user._text.nativeElement.innerText);
-      });
+      if (usersList.length === 0) {
+        this.positionService.usersIdRequestList.push('fakeUser');
+      } else {
+        usersList.forEach(user => {
+          this.positionService.usersIdRequestList.push(user._text.nativeElement.innerText);
+        });
+      }
     }
 
-    if (this.boundPositions.length === 0) {
-      // creo poligono da vertici mappa
-      const bounds = this.map.getBounds();
-      this.boundPositions.push(bounds.getSouthWest()); // bottom left
-      this.boundPositions.push(bounds.getSouthEast()); // bottom right
-      this.boundPositions.push(bounds.getNorthEast()); // top right
-      this.boundPositions.push(bounds.getNorthWest()); // top left
-    }
+    // creo poligono da vertici mappa
+    const bounds = this.map.getBounds();
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getSouthWest().lat, bounds.getSouthWest().lng)
+      ); // bottom left
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getSouthEast().lat, bounds.getSouthEast().lng)
+    ); // bottom right
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getNorthEast().lat, bounds.getNorthEast().lng)
+    ); // top right
+    this.positionService.polygonPositions.push(
+      new Position(null, bounds.getNorthWest().lat, bounds.getNorthWest().lng)
+    ); // top left
 
-    this.client.getBuyablePositions(this.boundPositions, this.dateMax, this.dateMin, this.usersIdRequestList).subscribe(
+
+    this.client.getBuyablePositions(
+      this.positionService.polygonPositions, this.dateMax, this.dateMin,
+      this.positionService.usersIdRequestList).subscribe(
       data => {
         data.reprCoordList.forEach(p => {
           // inserisco utente nell'array users solo se non c'è già
@@ -346,7 +358,7 @@ export class BuyComponent implements OnInit {
           if (flag) {
             temp.markerColor = '';
             for (let i = 0; i < 6; i++) {
-              temp.markerColor += this.colorLetters[Math.floor(Math.random() * 16)];
+              temp.markerColor += this.colorLetters[Math.floor(temp.id.substr(-i, 1).charCodeAt(0) / 16)];
             }
             this.users.push(temp);
           }
@@ -361,13 +373,15 @@ export class BuyComponent implements OnInit {
           cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
           this.markersForSale.push(newMarker);
           this.positionService.positionsForSale.push(p);
-          this.boundPositions = [];
         });
         const style: HTMLLinkElement = document.createElement('link');
         style.setAttribute('rel', 'stylesheet');
         style.setAttribute('type', 'text/css');
         style.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(cssText));
         document.head.appendChild(style);
+
+        this.positionCount = this.client.countPositions(
+          this.positionService.polygonPositions, this.dateMax, this.dateMin, this.positionService.usersIdRequestList);
     });
   }
 

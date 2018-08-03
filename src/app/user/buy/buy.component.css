@@ -42,14 +42,8 @@ mat-list {
     width: 100%;
 }
 
-#users-card, #buy-card {
-    width: 25%;
-    margin: 8px;
-}
-
-#filter-card {
-    width: 50%;
-    margin: 8px;
+.fab-button.filter {
+    margin: 10px;
 }
 
 a {

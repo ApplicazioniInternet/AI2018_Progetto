@@ -1,7 +1,13 @@
 <div class="container-dialog">
   <h1 mat-dialog-title>Compra Posizioni</h1>
   <div mat-dialog-content>
-    <p>Posizioni interne all'area selezionata: {{counter}}</p>
+    <p>Lista archivi nell'area selezionata</p>
+    <mat-list dense>
+      <mat-list-item *ngFor="let archive of archives">
+        {{archive}}
+      </mat-list-item>
+    </mat-list>
+    <p>Numero a rchivi nell'area selezionata: {{archives.length}}</p>
     <p>Confermare acquisto?</p>
   </div>
   <div mat-dialog-actions>

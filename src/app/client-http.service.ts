@@ -56,7 +56,7 @@ export class ClientHttpService {
      * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
      * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
      */
-    buyArchives(polygon: Position[], timestampBefore: number, timestampAfter: number): Observable<Archive[]> {
+    buyArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<Archive[]> {
         const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
         longlatArray.push(longlatArray[0]); // Per chiudere il poligono
         const json = {
@@ -65,17 +65,75 @@ export class ClientHttpService {
             'area': {
                 'type': 'Polygon',
                 'coordinates': [longlatArray]
-            }
+            },
+          'userIds' : usersIdRequestList
         };
         return this.http.post<Archive[]>(this.path + '/secured/buy/archives/buy', json, {});
     }
 
-    /**
+  /**
+   * Funzione per contare archivi relativi alle posizioni nell'area selezionata
+   * @param polygon = poligono che definisce l'area di interesse
+   * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
+   * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
+   */
+  countArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<number> {
+    const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
+    longlatArray.push(longlatArray[0]); // Per chiudere il poligono
+    const json = {
+      'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
+      'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
+      'area': {
+        'type': 'Polygon',
+        'coordinates': [longlatArray]
+      },
+      'userIds' : usersIdRequestList
+    };
+    return this.http.post<number>(this.path + '/secured/archives/area/count', json, {});
+  }
+
+  /**
+   * Funzione per contare archivi relativi alle posizioni nell'area selezionata
+   * @param polygon = poligono che definisce l'area di interesse
+   * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
+   * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
+   */
+  listArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<Archive[]> {
+    const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
+    longlatArray.push(longlatArray[0]); // Per chiudere il poligono
+    const json = {
+      'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
+      'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
+      'area': {
+        'type': 'Polygon',
+        'coordinates': [longlatArray]
+      },
+      'userIds' : usersIdRequestList
+    };
+    return this.http.post<Archive[]>(this.path + '/secured/archives/area/list', json, {});
+  }
+
+  countPositions(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<number> {
+    const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
+    longlatArray.push(longlatArray[0]); // Per chiudere il poligono
+    const json = {
+      'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
+      'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
+      'area': {
+        'type': 'Polygon',
+        'coordinates': [longlatArray]
+      },
+      'userIds' : usersIdRequestList
+    };
+    return this.http.post<number>(this.path + '/secured/positions/area/count', json, {});
+  }
+
+  /**
      * Funzione per prendere tutte le posizioni che il customer loggato può comprare
      */
-    getBuyablePositions(polygon: LatLng[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<any> {
-      const longlatArray = polygon.map((x) => [x.lng, x.lat]);
-      longlatArray.push(longlatArray[0]); // Per chiudere il poligono
+    getBuyablePositions(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<any> {
+    const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
+    longlatArray.push(longlatArray[0]); // Per chiudere il poligono
       const json = {
         'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
         'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
@@ -88,6 +146,7 @@ export class ClientHttpService {
       return this.http.post<any[]>(this.path + '/secured/positions/representations', json, {});
     }
 
+    // seleziona la lista di posizioni dell'archivio
     getArchivePositions(id: string) {
       return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
     }

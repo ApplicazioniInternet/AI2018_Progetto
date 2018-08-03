@@ -11,6 +11,7 @@ import { PositionForm } from './user/buy/position-form';
 export class PositionService {
   polygonPositions: Position[] = [];
   positionsForSale: Position[] = [];
+  usersIdRequestList: string[] = [];
 
   dateMin: number;
   dateMax: number;
@@ -22,36 +23,9 @@ export class PositionService {
 
   buyPositionsInArea(polygon: Position[]) {
     this.polygonPositions = polygon;
-    this.client.buyArchives(polygon, this.dateMax, this.dateMin).subscribe(() => {
+    this.client.buyArchives(polygon, this.dateMax, this.dateMin, this.usersIdRequestList).subscribe(() => {
       this.boughtPositions.emit();
     });
-  }
-
-  private isPositionsInPolygon(point: Position, polygon: Position[]): Boolean {
-    const x = point.longitude;
-    const y = point.latitude;
-
-    let inside = false;
-    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-      const xi = polygon[i].longitude, yi = polygon[i].latitude;
-      const xj = polygon[j].longitude, yj = polygon[j].latitude;
-
-      const intersect = ((yi > y) !== (yj > y))
-        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-      if (intersect) { inside = !inside; }
-    }
-    return inside;
-  }
-
-  countPositionsInPolygon(polygon: Position[]): number {
-    let count = 0;
-
-    for (const pos of this.positionsForSale) {
-      if (this.isPositionsInPolygon(pos, polygon)) {
-        count++;
-      }
-    }
-    return count;
   }
 
   notifyRemoveAllPosition(): void {

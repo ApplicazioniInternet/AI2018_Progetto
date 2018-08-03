@@ -60,11 +60,14 @@
     </mat-card-title>
 
     <div>
-      <h3>Compra posizioni visibili</h3>
+      <h3>Carrello posizioni visibili</h3>
       <p>
-        Schiacciando il bottone, verranno acquistati gli archivi contenenti le posizioni visibili nella mappa (o il sottoinsieme selezionato)
+        Schiacciando il bottone, verranno visualizzati gli archivi contenenti le posizioni nella mappa (o il sottoinsieme selezionato), per effettuarne l'acquisto
       </p>
-      <p>Posizioni selezionate: counter qua</p>
+      <p>Posizioni selezionate:
+          <span>{{positionCount | async}}</span>
+      </p>
+
       <button mat-fab
               class="fab-button"
               matTooltip="Compra"
@@ -74,9 +77,9 @@
     </div>
   </mat-card>
 
-  <mat-card class="bg-card">
+  <mat-card class="bg-card utenti">
     <mat-card-title>
-      Utenti
+      Filtra Utenti
     </mat-card-title>
 
     <p>
@@ -89,15 +92,18 @@
       </mat-list-option>
     </mat-selection-list>
 
-    <div>
-      <p>Filtra posizioni degli utenti selezionati</p>
-      <button mat-fab
-              class="fab-button"
-              matTooltip="Filtra"
-              (click)='getPositionsToBuy(usersList.selectedOptions.selected)'>
+    <button mat-fab
+      class="fab-button filter"
+      matTooltip="Filtra"
+      (click)='getPositionsToBuy(usersList.selectedOptions.selected)'>
         <mat-icon>done</mat-icon>
-      </button>
-    </div>
+    </button>
+    <button mat-fab
+      class="fab-button filter"
+      matTooltip="Reset"
+      (click)='getPositionsToBuy()'>
+        <mat-icon>cached</mat-icon>
+    </button>
 
   </mat-card>
 
