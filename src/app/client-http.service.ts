@@ -76,7 +76,7 @@ export class ClientHttpService {
         return this.http.get<Position[]>(this.path + '/secured/buy/buyable/archives');
     }
 
-    getArchivePositions(id:string) {
+    getArchivePositions(id: string) {
       return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
     }
 

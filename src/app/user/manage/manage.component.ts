@@ -62,7 +62,7 @@ export class ManageComponent implements OnInit {
             }
           }
         );
-    }
+    };
     fileReader.readAsText(this.file.nativeElement.files[0]);
   }
 
@@ -118,7 +118,7 @@ export class ManageComponent implements OnInit {
     );
   }
 
-  getArchivePositions(id:string) {
+  getArchivePositions(id: string) {
     this.client.getArchivePositions(id).subscribe(
       data => this.positions = data
     );

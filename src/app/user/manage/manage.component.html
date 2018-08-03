@@ -75,15 +75,16 @@
                 </ul>
               </div>
             </mat-expansion-panel>
-            <button class="delete-archive" mat-button
+            <button class="delete-archive" mat-fab
                     (click)='downloadArchive(archive.id,
                     "archive_" + archive.id + "_user_" + archive.userId)'
                     color="primary">
-              Download
+              <mat-icon>save_alt</mat-icon>
             </button>
-            <button class="download-archive" mat-button
+            <span>&nbsp;</span>
+            <button class="download-archive" mat-fab
                     (click)='deleteArchive(archive.id)' color="accent">
-              Elimina
+              <mat-icon>cancel</mat-icon>
             </button>
           </li>
         </mat-accordion>
