@@ -9,19 +9,14 @@ import {
   Polygon,
   tileLayer,
   Draw,
-  icon,
-  LatLng,
-  control,
-  LatLngBounds
+  icon
 } from 'leaflet';
 import {FormControl} from '@angular/forms';
 import {PositionService} from '../../position.service';
 import {Position} from '../../position';
-import {MatDatepickerInputEvent, MatDialog, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
-import {DialogOverviewComponent} from '../../shared-components/dialog-overview/dialog-overview.component';
+import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
-import {Observable} from 'rxjs';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -67,8 +62,9 @@ export class BuyComponent implements OnInit {
 
 
 
-  constructor(private positionService: PositionService, public snackBar: MatSnackBar,
-              public dialog: MatDialog, private client: ClientHttpService) {}
+  constructor(private positionService: PositionService,
+              public snackBar: MatSnackBar,
+              private client: ClientHttpService) {}
 
   ngOnInit() {
 
@@ -130,19 +126,6 @@ export class BuyComponent implements OnInit {
         remove: true
       }
     };
-
-    // Metto un listener per capire quando devo pulire tutta la mappa
-    this.positionService.clearAllPositions.subscribe( () => {
-      this.clearMap();
-      this.positionService.polygonPositions = [];
-    });
-
-    // // Metto un listener per capire quando devo aggiornare le pos acquistate
-    // this.positionService.boughtPositions.subscribe( () => {
-    //   this.getBoughtPositions();
-    // });
-    //
-    // this.getBoughtPositions();
 
   }
 
@@ -210,7 +193,7 @@ export class BuyComponent implements OnInit {
   }
 
   // Funzione chiamata quando si cancella il disegno dalla mappa
-  onDeleteFromMap(e: any) {
+  onDeleteFromMap() {
     this.clearMap();
     this.positionService.polygonPositions = [];
     // creo poligono da vertici mappa
@@ -257,47 +240,11 @@ export class BuyComponent implements OnInit {
     this.getPositionsToBuy();
   }
 
-  // Funzione chiamata quando si è cliccato il fab in basso
-  submit() {
-    if (!this.inputVerticesOk()) { // È corretto l'input
-      this.openSnackBar('Presente almeno un valore errato', 'OK');
-    } else if (!this.areValidVertices()) { // Sono vertici validi, ossia lo stesso vertice non è ripetuto (e disegnano una figura?)
-      this.openSnackBar('Non puoi ripetere lo stesso vertice più di una volta', 'OK');
-    } else {
-      this.openDialog();
-    }
-  }
-
   // Apri la snack bar e fai vedere un messaggio con un bottoncino di fianco
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 2000,
     });
-  }
-
-  // Funzione per controllare che l'input sia corretto
-  inputVerticesOk(): boolean {
-    const wrongPositions = 0;
-    return wrongPositions === 0;
-  }
-
-  // Funzione per controllare se un singolo vertice è valido
-  areValidVertices(): boolean {
-    const repetition = 0;
-    return repetition === 0;
-  }
-
-  // Funzione per aprire il dialog che ti visualizza quante posizioni ci sono nell'area
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewComponent, {
-      height: '250px',
-      width: '250px',
-      data: {  }
-    });
-  }
-
-  getDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleString();
   }
 
   private getPositionsToBuy(usersList?) {

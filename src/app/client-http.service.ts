@@ -5,6 +5,7 @@ import {User} from './user';
 import {Position} from './position';
 import {Archive} from './archive';
 import {LatLng} from 'leaflet';
+import {ArchiveId} from './archive-id';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +99,7 @@ export class ClientHttpService {
    * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
    * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
    */
-  listArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<Archive[]> {
+  listArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<ArchiveId[]> {
     const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
     longlatArray.push(longlatArray[0]); // Per chiudere il poligono
     const json = {
@@ -110,7 +111,7 @@ export class ClientHttpService {
       },
       'userIds' : usersIdRequestList
     };
-    return this.http.post<Archive[]>(this.path + '/secured/archives/area/list', json, {});
+    return this.http.post<ArchiveId[]>(this.path + '/secured/archives/area/list', json, {});
   }
 
   countPositions(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<number> {

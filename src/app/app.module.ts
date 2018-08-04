@@ -16,8 +16,6 @@ import { BuyComponent } from './user/buy/buy.component';
 import { LoginComponent } from './authorization/login/login.component';
 
 import { RouterModule, Routes } from '@angular/router';
-import { DialogOverviewComponent } from './shared-components/dialog-overview/dialog-overview.component';
-import { UpdateFileComponent } from './shared-components/update-file/update-file.component';
 import { AuthGuardService } from './authorization/auth-guard.service';
 import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
@@ -44,11 +42,8 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    DialogOverviewComponent,
     BuyComponent,
     LoginComponent,
-    DialogOverviewComponent,
-    UpdateFileComponent,
     RegisterComponent,
     ManageComponent,
     GraphComponent,
@@ -83,7 +78,6 @@ export function tokenGetter() {
           multi: true
       }
   ],
-  entryComponents: [DialogOverviewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

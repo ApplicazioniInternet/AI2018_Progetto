@@ -13,21 +13,13 @@ export class PositionService {
   dateMin: number;
   dateMax: number;
 
-  @Output() clearAllPositions: EventEmitter<void> = new EventEmitter();
-  @Output() boughtPositions: EventEmitter<void> = new EventEmitter();
-
   constructor(private client: ClientHttpService) {}
 
   buyPositionsInArea(polygon: Position[]) {
     this.polygonPositions = polygon;
     this.client.buyArchives(polygon, this.dateMax, this.dateMin, this.usersIdRequestList).subscribe(() => {
-      this.boughtPositions.emit();
+      this.polygonPositions = [];
     });
-  }
-
-  notifyRemoveAllPosition(): void {
-    this.clearAllPositions.emit();
-    this.polygonPositions = [];
   }
 
 }

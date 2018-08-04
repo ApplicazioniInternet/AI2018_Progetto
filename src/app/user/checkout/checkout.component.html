@@ -3,19 +3,45 @@
     Acquista posizioni
   </mat-card-title>
 
-  <p>
-    Numero archivi selezionati:
-  </p>
+  <div *ngIf="!emptyCart">
+    <p>
+      Numero archivi selezionati:
+    </p>
 
-  <mat-list dense>
-    <mat-list-item>
-    </mat-list-item>
-  </mat-list>
+    <mat-list dense>
+      <mat-list-item *ngFor="let archive of archives">
+        {{archive.archiveId}}
+      </mat-list-item>
+    </mat-list>
 
-  <button mat-fab
-          class="fab-button"
-          matTooltip="Compra"
-          (click)='buy()'>
-    <mat-icon>done</mat-icon>
-  </button>
+    <a routerLink="/buy">
+      <button color="accent" mat-raised-button
+              matTooltip="Vai alla selezione">
+        Indietro
+      </button>
+    </a>
+    <button mat-raised-button
+            color="primary"
+            matTooltip="Compra"
+            (click)='buy()'>
+      Acquista
+    </button>
+  </div>
+
+  <div *ngIf="emptyCart">
+    <h2 class="no-archives">
+      Nessuna posizione selezionata.
+    </h2>
+
+    <p>
+      Torna alla selezione delle posizioni
+    </p>
+    <a routerLink="/buy">
+      <button color="accent" mat-raised-button
+              matTooltip="Vai alla selezione">
+        Indietro
+      </button>
+    </a>
+  </div>
+
 </mat-card>
