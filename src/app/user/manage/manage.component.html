@@ -59,15 +59,16 @@
 
               <mat-card>
                 <p>Gestisci Archivio</p>
-                <button class="delete-archive" mat-button
+                <button class="download-archive" mat-fab
                         (click)='downloadArchive(archive.id,
-                      "archive_" + archive.id + "_user_" + archive.userId)'
+                    "archive_" + archive.id + "_user_" + archive.userId)'
                         color="primary">
-                  Download
+                  <mat-icon>save_alt</mat-icon>
                 </button>
-                <button class="download-archive" mat-button
+                <span>&nbsp;</span>
+                <button class="delete-archive" mat-fab
                         (click)='deleteArchive(archive.id)' color="accent">
-                  Elimina
+                  <mat-icon>cancel</mat-icon>
                 </button>
               </mat-card>
 
@@ -94,17 +95,6 @@
                 </ul>
               </mat-card>
             </mat-expansion-panel>
-            <button class="delete-archive" mat-fab
-                    (click)='downloadArchive(archive.id,
-                    "archive_" + archive.id + "_user_" + archive.userId)'
-                    color="primary">
-              <mat-icon>save_alt</mat-icon>
-            </button>
-            <span>&nbsp;</span>
-            <button class="download-archive" mat-fab
-                    (click)='deleteArchive(archive.id)' color="accent">
-              <mat-icon>cancel</mat-icon>
-            </button>
           </li>
         </mat-accordion>
       </ul>

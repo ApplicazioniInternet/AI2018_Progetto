@@ -25,7 +25,9 @@ export class CheckoutComponent implements OnInit {
         .subscribe(
           data => {
             this.archives = data;
-            this.emptyCart = false;
+            if (this.archives.length > 0) {
+              this.emptyCart = false;
+            }
           }
         );
     }

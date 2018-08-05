@@ -4,7 +4,6 @@ import {Position} from '../../position';
 import {ClientHttpService} from '../../client-http.service';
 import {MatSnackBar} from '@angular/material';
 import {Archive} from '../../archive';
-import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-manage',
