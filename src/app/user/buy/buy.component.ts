@@ -292,7 +292,7 @@ export class BuyComponent implements OnInit {
       this.positionService.polygonPositions, this.dateMax, this.dateMin,
       this.positionService.usersIdRequestList).subscribe(
       data => {
-        this.positionService.positionsForSale = [];
+        this.positionCount = 0;
         data.reprCoordList.forEach(p => {
           // inserisco utente nell'array users solo se non c'è già
           let temp = new User(p.userId);
@@ -319,9 +319,8 @@ export class BuyComponent implements OnInit {
           // .getElement().setAttribute('style', 'background-color: ' + temp.markerColor);
           this.map.addLayer(newMarker);
           cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
-          this.positionService.positionsForSale.push(p);
+          this.positionCount++;
         });
-        this.positionCount = this.positionService.positionsForSale.length;
         const style: HTMLLinkElement = document.createElement('link');
         style.setAttribute('rel', 'stylesheet');
         style.setAttribute('type', 'text/css');

@@ -34,6 +34,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   buy() {
-    this.positionService.buyPositionsInArea(this.positionService.polygonPositions);
+    this.client.buyArchives(this.archives).subscribe(
+      (data) => {
+        console.log(data);
+      }
+    );
   }
 }

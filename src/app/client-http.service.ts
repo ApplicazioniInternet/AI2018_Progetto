@@ -56,19 +56,9 @@ export class ClientHttpService {
      * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
      * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
      */
-    buyArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<Archive[]> {
-        const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
-        longlatArray.push(longlatArray[0]); // Per chiudere il poligono
-        const json = {
-            'timestampBefore': timestampBefore.toString(), // Da mettere come stringa
-            'timestampAfter': timestampAfter.toString(), // Da mettere come stringa
-            'area': {
-                'type': 'Polygon',
-                'coordinates': [longlatArray]
-            },
-          'userIds' : usersIdRequestList
-        };
-        return this.http.post<Archive[]>(this.path + '/secured/buy/archives/buy', json, {});
+    buyArchives(archiveIds: ArchiveId[]) {
+      const json = { archiveIds };
+      return this.http.post(this.path + '/secured/archives/buy', json, {});
     }
 
   /**
