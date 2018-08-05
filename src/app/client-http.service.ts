@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import {User} from './user';
 import {Position} from './position';
 import {Archive} from './archive';
-import {LatLng} from 'leaflet';
 import {ArchiveId} from './archive-id';
 
 @Injectable({

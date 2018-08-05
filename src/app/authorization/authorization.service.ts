@@ -77,6 +77,8 @@ export class AuthorizationService {
       .set('grant_type', 'refresh_token')
       .set('refresh_token', localStorage.getItem('refresh_token'));
 
+    localStorage.clear();
+
     const headersValue = new HttpHeaders()
         .append('Authorization', 'Basic ' + btoa('client:password'))
         .append('Content-type', 'application/x-www-form-urlencoded');
@@ -88,7 +90,6 @@ export class AuthorizationService {
     this._http.post('http://localhost:8080/oauth/token', params.toString(), httpOptions)
         .subscribe(
             data => {
-              localStorage.clear();
               this.saveToken(data);
               this.redirect();
               this.openSnackBar('Sessione scaduta', 'OK');

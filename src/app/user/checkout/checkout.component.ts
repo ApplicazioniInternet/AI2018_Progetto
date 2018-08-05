@@ -24,7 +24,6 @@ export class CheckoutComponent implements OnInit {
         this.positionService.dateMax, this.positionService.dateMin, this.positionService.usersIdRequestList)
         .subscribe(
           data => {
-            console.log(data)
             this.archives = data;
             this.emptyCart = false;
           }
