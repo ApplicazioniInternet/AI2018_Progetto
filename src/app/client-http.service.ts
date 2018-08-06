@@ -136,16 +136,15 @@ export class ClientHttpService {
       return this.http.post<any[]>(this.path + '/secured/positions/representations', json, {});
     }
 
-    // seleziona la lista di posizioni dell'archivio
-    getArchivePositions(id: string) {
-      return this.http.get<Position[]>(this.path + '/secured/archives/archive/' + id + '/positions');
-    }
-
     deleteArchive(id: string) {
       return this.http.delete(this.path + '/secured/archives/archive/' + id + '/delete');
     }
 
     downloadArchive(id: string) {
       return this.http.get(this.path + '/secured/archives/archive/' + id + '/download');
+    }
+
+    getArchiveSaleCount(id: string): Observable<number> {
+      return this.http.get<number>(this.path + '/secured/archives/archive/' + id + '/sales');
     }
 }

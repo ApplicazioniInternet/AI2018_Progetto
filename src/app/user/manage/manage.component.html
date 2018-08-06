@@ -47,14 +47,14 @@
                     (closed)="panelOpenState2 = false"
                     class="archive-exp"
             >
-              <mat-expansion-panel-header (click)='getArchivePositions(archive.id)'>
+              <mat-expansion-panel-header (click)='getArchiveSaleCount(archive.id)'>
                 <mat-panel-title>
                   <p class="p-archive" >Id: {{archive.id}}</p>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
               <mat-card class="first-mat-card">
-                <p>Numero di acquisti da parte di altri utenti: </p>
+                <p>Numero di acquisti da parte di altri utenti: {{saleCount}}</p>
               </mat-card>
 
               <mat-card>
@@ -65,7 +65,6 @@
                         color="primary">
                   <mat-icon>save_alt</mat-icon>
                 </button>
-                <span>&nbsp;</span>
                 <button class="delete-archive" mat-fab
                         (click)='deleteArchive(archive.id)' color="accent">
                   <mat-icon>cancel</mat-icon>
@@ -76,7 +75,7 @@
                 <p>Posizioni presenti nell'archivio</p>
                 <ul class="no-bullet-ul">
                   <mat-accordion>
-                    <li *ngFor="let position of positions">
+                    <li *ngFor="let position of archive.positions">
                       <mat-expansion-panel
                               [expanded]="false"
                               (opened)="panelOpenState2 = true"
@@ -117,18 +116,52 @@
           <li *ngFor="let archive of archivesBought">
             <mat-expansion-panel
                     [expanded]="false"
-                    (opened)="panelOpenState = true"
-                    (closed)="panelOpenState = false"
+                    (opened)="panelOpenState2 = true"
+                    (closed)="panelOpenState2 = false"
+                    class="archive-exp"
             >
               <mat-expansion-panel-header>
                 <mat-panel-title>
-                  Posizione: {{archive.id}}
+                  <p class="p-archive" >Id: {{archive.id}}</p>
                 </mat-panel-title>
-                <mat-panel-description>
-                  {{panelOpenState ?  'Clicca per chiudere i dettagli della posizione' : 'Clicca per vedere i dettagli della posizione'}}
-                </mat-panel-description>
               </mat-expansion-panel-header>
-              <p><span>UserId: </span>{{archive.userId}}</p>
+
+              <mat-card class="first-mat-card">
+                <p>Proprietario: {{archive.userId}}</p>
+              </mat-card>
+
+              <mat-card>
+                <p>Gestisci Archivio</p>
+                <button class="download-archive" mat-fab
+                        (click)='downloadArchive(archive.id,
+                    "archive_" + archive.id + "_user_" + archive.userId)'
+                        color="primary">
+                  <mat-icon>save_alt</mat-icon>
+                </button>
+              </mat-card>
+
+              <mat-card class="position-container">
+                <p>Posizioni presenti nell'archivio</p>
+                <ul class="no-bullet-ul">
+                  <mat-accordion>
+                    <li *ngFor="let position of archive.positions">
+                      <mat-expansion-panel
+                              [expanded]="false"
+                              (opened)="panelOpenState2 = true"
+                              (closed)="panelOpenState2 = false"
+                      >
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            Lat: {{position.latitude}} Long: {{position.longitude}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <p><span>Id Posizione: </span>{{position.id}}</p>
+                        <p><span>Date: </span>{{getDate(position.timestamp*1000)}}</p>
+                      </mat-expansion-panel>
+                    </li>
+                  </mat-accordion>
+                </ul>
+              </mat-card>
             </mat-expansion-panel>
           </li>
         </mat-accordion>

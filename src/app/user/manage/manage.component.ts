@@ -14,7 +14,7 @@ export class ManageComponent implements OnInit {
   title = 'Manage';
   archives: Archive[];
   archivesBought: Archive[];
-  positions: Position[];
+  saleCount: number;
   filename = 'Nessun file scelto';
   invalidfile = true;
 
@@ -117,9 +117,9 @@ export class ManageComponent implements OnInit {
     );
   }
 
-  getArchivePositions(id: string) {
-    this.client.getArchivePositions(id).subscribe(
-      data => this.positions = data
+  getArchiveSaleCount(id: string) {
+    this.client.getArchiveSaleCount(id).subscribe(
+      data => this.saleCount = data
     );
   }
 
