@@ -60,12 +60,14 @@
               <mat-card>
                 <p>Gestisci Archivio</p>
                 <button class="download-archive" mat-fab
+                        matTooltip="Download"
                         (click)='downloadArchive(archive.id,
                     "archive_" + archive.id + "_user_" + archive.userId)'
                         color="primary">
                   <mat-icon>save_alt</mat-icon>
                 </button>
                 <button class="delete-archive" mat-fab
+                        matTooltip="Rimuovi"
                         (click)='deleteArchive(archive.id)' color="accent">
                   <mat-icon>cancel</mat-icon>
                 </button>
@@ -133,6 +135,7 @@
               <mat-card>
                 <p>Gestisci Archivio</p>
                 <button class="download-archive" mat-fab
+                        matTooltip="Download"
                         (click)='downloadArchive(archive.id,
                     "archive_" + archive.id + "_user_" + archive.userId)'
                         color="primary">
