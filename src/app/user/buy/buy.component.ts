@@ -70,7 +70,7 @@ export class BuyComponent implements OnInit {
 
     // Marker per le posizioni degli utenti che sono sulla mappa
     this.markerUserEmpty = icon({
-      iconSize: [25, 25],
+      iconSize: [10, 10],
       iconUrl: this.ICON_URL_EMPTY
     });
 
@@ -309,8 +309,9 @@ export class BuyComponent implements OnInit {
               temp.markerColor += this.colorLetters[Math.floor(temp.id.substr(-i, 1).charCodeAt(0) / 16)];
             }
             this.users.push(temp);
+            this.markerUserEmpty.options.className = 'marker-user color-' + temp.markerColor;
+            cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
           }
-          this.markerUserEmpty.options.className = 'marker-user color-' + temp.markerColor;
           // popolo mappa
           const newMarker = marker(latLng(p.lat, p.lng),
             { icon: this.markerUserEmpty })
@@ -318,7 +319,6 @@ export class BuyComponent implements OnInit {
           ;
           // .getElement().setAttribute('style', 'background-color: ' + temp.markerColor);
           this.map.addLayer(newMarker);
-          cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
           this.positionCount++;
         });
         const style: HTMLLinkElement = document.createElement('link');
