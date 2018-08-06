@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import {User} from './user';
 import {Position} from './position';
 import {Archive} from './archive';
-import {ArchiveId} from './archive-id';
+import {ArchiveLight} from './archive-light';
 
 @Injectable({
   providedIn: 'root'
@@ -37,20 +37,13 @@ export class ClientHttpService {
     }
 
     /**
-     * Funzione per prendere tutti gli utenti registrati per l'admin
-     */
-    getUsers(): Observable<User[]> {
-        return this.http.get<User[]>(this.path + '/secured/users');
-    }
-
-    /**
      * Funzione per comprare le posizioni per il customer loggato
      * @param polygon = poligono che definisce l'area di interesse
      * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
      * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
      */
-    buyArchives(archiveIds: ArchiveId[]) {
-      const json = { archiveIds };
+    buyArchives(archiveList: ArchiveLight[]) {
+      const json = { archiveList };
       return this.http.post(this.path + '/secured/archives/buy', json, {});
     }
 
@@ -81,7 +74,7 @@ export class ClientHttpService {
    * @param timestampBefore = timestamp dopo il quale non ci interessano più le posizioni
    * @param timestampAfter = timestamp prima del quale non ci interessano più le posizioni
    */
-  listArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<ArchiveId[]> {
+  listArchives(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<ArchiveLight[]> {
     const longlatArray = polygon.map((x) => [x.longitude, x.latitude]);
     longlatArray.push(longlatArray[0]); // Per chiudere il poligono
     const json = {
@@ -93,7 +86,7 @@ export class ClientHttpService {
       },
       'userIds' : usersIdRequestList
     };
-    return this.http.post<ArchiveId[]>(this.path + '/secured/archives/area/list', json, {});
+    return this.http.post<ArchiveLight[]>(this.path + '/secured/archives/area/list', json, {});
   }
 
   countPositions(polygon: Position[], timestampBefore: number, timestampAfter: number, usersIdRequestList): Observable<number> {

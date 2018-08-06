@@ -13,3 +13,16 @@ a {
     display: inline-block;
     margin: 10px;
 }
+
+table {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.icon-success {
+    color: #09B218;
+}
+
+.icon-failure {
+    color: #CC401F;
+}

@@ -86,7 +86,6 @@ mat-expansion-panel{
 }
 
 .container-row {
-    display: flex;
     text-align:center;
     width: 100%;
 }

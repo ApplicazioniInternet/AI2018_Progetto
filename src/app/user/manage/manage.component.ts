@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import { ViewChild } from '@angular/core';
-import {Position} from '../../position';
 import {ClientHttpService} from '../../client-http.service';
 import {MatSnackBar} from '@angular/material';
 import {Archive} from '../../archive';

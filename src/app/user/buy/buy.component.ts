@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {
   FeatureGroup,
   latLng,
@@ -17,6 +17,7 @@ import {Position} from '../../position';
 import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
+import {element} from 'protractor';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -70,7 +71,7 @@ export class BuyComponent implements OnInit {
 
     // Marker per le posizioni degli utenti che sono sulla mappa
     this.markerUserEmpty = icon({
-      iconSize: [10, 10],
+      iconSize: [15, 15],
       iconUrl: this.ICON_URL_EMPTY
     });
 
@@ -249,6 +250,7 @@ export class BuyComponent implements OnInit {
 
   private getPositionsToBuy(usersList?) {
     let cssText = '';
+    let userAdded = false;
     this.clearMap();
     // remove markers
     this.map.eachLayer((layer) => {
@@ -257,12 +259,12 @@ export class BuyComponent implements OnInit {
       }
     });
 
-    this.users = [];
     this.positionService.polygonPositions = [];
     this.positionService.usersIdRequestList = [];
 
     // se presente riempo la lista di users richiedere al server
     if (usersList !== undefined) {
+      this.users = [];
       if (usersList.length === 0) {
         this.positionService.usersIdRequestList.push('fakeUser');
       } else {
@@ -304,14 +306,16 @@ export class BuyComponent implements OnInit {
             }
           });
           if (flag) {
+            userAdded = true;
             temp.markerColor = '';
             for (let i = 0; i < 6; i++) {
               temp.markerColor += this.colorLetters[Math.floor(temp.id.substr(-i, 1).charCodeAt(0) / 16)];
             }
             this.users.push(temp);
-            this.markerUserEmpty.options.className = 'marker-user color-' + temp.markerColor;
             cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
           }
+
+          this.markerUserEmpty.options.className = 'marker-user color-' + temp.markerColor;
           // popolo mappa
           const newMarker = marker(latLng(p.lat, p.lng),
             { icon: this.markerUserEmpty })
@@ -321,12 +325,17 @@ export class BuyComponent implements OnInit {
           this.map.addLayer(newMarker);
           this.positionCount++;
         });
-        const style: HTMLLinkElement = document.createElement('link');
-        style.setAttribute('rel', 'stylesheet');
-        style.setAttribute('type', 'text/css');
-        style.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(cssText));
-        document.head.appendChild(style);
-    });
+
+        // aggiungo css solo se ho trovato nuovo utente
+        if (userAdded) {
+          const style: HTMLLinkElement = document.createElement('link');
+          style.setAttribute('class', 'markers-color-icon');
+          style.setAttribute('rel', 'stylesheet');
+          style.setAttribute('type', 'text/css');
+          style.setAttribute('href', 'data:text/css;charset=UTF-8,' + encodeURIComponent(cssText));
+          document.head.appendChild(style);
+        }
+      });
   }
 
 }

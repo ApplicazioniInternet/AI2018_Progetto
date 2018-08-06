@@ -5,14 +5,47 @@
 
   <div *ngIf="!emptyCart">
     <p>
-      Numero archivi selezionati:
+      Numero archivi selezionati: {{archives.length}}
     </p>
 
-    <mat-list dense>
-      <mat-list-item *ngFor="let archive of archives">
-        {{archive.archiveId}}
-      </mat-list-item>
-    </mat-list>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z3">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id Archivio</th>
+        <td mat-cell *matCellDef="let archive"> {{archive.archiveId}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="bought">
+        <th mat-header-cell *matHeaderCellDef> Già acquistato </th>
+        <td mat-cell *matCellDef="let archive">
+          <mat-icon class="icon-success" *ngIf="archive.bought">check_circle</mat-icon>
+          <mat-icon class="icon-failure" *ngIf="!archive.bought">highlight_off</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          (click)="selection.toggle(row)">
+      </tr>
+    </table>
 
     <a routerLink="/buy">
       <button color="accent" mat-raised-button
