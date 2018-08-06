@@ -37,13 +37,6 @@ export class ClientHttpService {
     }
 
     /**
-     * Funzione per prendere tutte le posizioni caricate sul server per l'admin
-     */
-    // getPositions(): Observable<Position[]> {
-    //     return this.http.get<Position[]>(this.path + '/secured/admin/archives');
-    // }
-
-    /**
      * Funzione per prendere tutti gli utenti registrati per l'admin
      */
     getUsers(): Observable<User[]> {
