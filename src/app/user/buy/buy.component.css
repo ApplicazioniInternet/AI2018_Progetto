@@ -27,6 +27,13 @@
     float: right;
 }
 
+.no-positions {
+    width: 100%;
+    margin: 15px auto;
+    color: grey;
+    font-style: italic;
+}
+
 mat-list-option {
     text-align: left;
     font-size: 16px;
@@ -135,6 +142,10 @@ li {
 
 mat-form-field {
     width: 40%;
+}
+
+#timeChart {
+    width: 100%;
 }
 
 @media screen and (max-width: 991px) {

@@ -1,29 +1,20 @@
 <div class="bg-map-div"> <!-- Inizio della divisione con la mappa -->
-  <mat-card>
+  <mat-card class="bg-form-card" >
     <mat-card-title>
-      Filtra per data
+      Vai all'acquisto
     </mat-card-title>
-    <div class="container-row">
-      <mat-form-field style="padding-right: 20px;">
-        <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
-               (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
 
-      <mat-form-field>
-        <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
-               (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="container-row">
-      <button mat-mini-fab
-              matTooltip="Filtra per data"
-              (click)='verifySales()'>
-        <mat-icon style="color: #FFFFFF">search</mat-icon>
-      </button>
+    <div>
+      <p>Posizioni selezionate:
+        <span>{{positionCount}}</span>
+      </p>
+
+      <a routerLink="/checkout">
+        <button color="accent" mat-raised-button
+                matTooltip="Vai all'aquisto">
+          Procedi all'acquisto
+        </button>
+      </a>
     </div>
   </mat-card>
 
@@ -53,24 +44,43 @@
 </div>
 
 <div class="bg-form-div">
-
-  <mat-card class="bg-form-card" >
+  <mat-card>
     <mat-card-title>
-      Vai all'acquisto
+      Rappresentazione temporale
     </mat-card-title>
+    <div id="timeChart">
+      <h2 class="no-positions" *ngIf="noPos">
+        Nessuna posizione selezionata.
+      </h2>
+    </div>
+  </mat-card>
 
-    <div>
-      <p>Posizioni selezionate:
-          <span>{{positionCount}}</span>
-      </p>
+  <mat-card>
+    <mat-card-title>
+      Filtra per data
+    </mat-card-title>
+    <div class="container-row">
+      <mat-form-field style="padding-right: 20px;">
+        <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
+               (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
 
-      <a routerLink="/checkout">
-        <button color="accent" mat-raised-button
-                matTooltip="Vai all'aquisto">
-          Procedi all'acquisto
-        </button>
-      </a>
-      </div>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
+               (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="container-row">
+      <button mat-mini-fab
+              matTooltip="Filtra per data"
+              (click)='verifySales()'>
+        <mat-icon style="color: #FFFFFF">search</mat-icon>
+      </button>
+    </div>
   </mat-card>
 
   <mat-card class="bg-card utenti">
@@ -101,17 +111,6 @@
         <mat-icon>cached</mat-icon>
     </button>
 
-  </mat-card>
-
-  <mat-card>
-    <mat-card-title>
-      Rappresentazione temporale
-    </mat-card-title>
-	<div>
-	  <app-graph
-      [userTimestamps]="positionsTimestamp"
-      ></app-graph>
-	</div>
   </mat-card>
   
 </div>

@@ -21,7 +21,6 @@ import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
 import { ManageComponent } from './user/manage/manage.component';
 import { CheckoutComponent } from './user/checkout/checkout.component';
-import { GraphComponent } from './user/buy/graph/graph.component';
 
 const appRoutes: Routes = [
     { path: 'manage', component: ManageComponent, canActivate: [AuthGuardService] },
@@ -44,7 +43,6 @@ export function tokenGetter() {
     LoginComponent,
     RegisterComponent,
     ManageComponent,
-    GraphComponent,
     CheckoutComponent,
   ],
   imports: [

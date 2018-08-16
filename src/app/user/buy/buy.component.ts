@@ -17,6 +17,7 @@ import {Position} from '../../position';
 import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
+declare var google: any;
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -61,11 +62,19 @@ export class BuyComponent implements OnInit {
   dateInitMin = new FormControl(new Date(2018, 4, 25));
   dateInitMax = new FormControl(new Date());
 
+  // rappr temporale
+  timeChart;
+  timeRapprHeaders: String[];
+  optionsTime;
+  noPos;
+  textNoPos;
+
   constructor(private positionService: PositionService,
               public snackBar: MatSnackBar,
               private client: ClientHttpService) {}
 
   ngOnInit() {
+    google.charts.load('current', {'packages': ['corechart']});
 
     // Marker per le posizioni degli utenti che sono sulla mappa
     this.markerUserEmpty = icon({
@@ -126,6 +135,28 @@ export class BuyComponent implements OnInit {
       }
     };
 
+    // rappr temporale
+    this.timeChart = document.getElementById('timeChart');
+    this.timeRapprHeaders = ['ID', 'Giorno', 'Ora', 'Utente'];
+    this.noPos = document.createElement('h2');
+    this.noPos.setAttribute('id', 'no-positions-time');
+    this.noPos.setAttribute('class', 'no-positions');
+    this.textNoPos = document.createTextNode('Nessuna posizione selezionata');
+
+    this.optionsTime = {
+      hAxis: {
+        title: 'Giorni',
+        format: 'dd/MM/yyyy'
+      },
+      vAxis: {
+        title: 'Ore',
+        format: 'HH:mm'
+      },
+      sizeAxis: {
+        minSize: 5,
+        maxSize: 5
+      }
+    };
   }
 
   // Funzione che mi serve per salvarmi la mappa in una variabile locale quando so che è stato tutto inizializzato
@@ -332,6 +363,7 @@ export class BuyComponent implements OnInit {
           );
         });
 
+        this.buildChart(this.positionsTimestamp);
         // aggiungo css solo se ho trovato nuovo utente
         if (userAdded) {
           const style: HTMLLinkElement = document.createElement('link');
@@ -344,4 +376,37 @@ export class BuyComponent implements OnInit {
       });
   }
 
+  // rappr temporale
+  private buildChart(userTimestamps: Position[]): void {
+    const chartFunc = () => new google.visualization.BubbleChart(this.timeChart);
+
+    const func = (cb, opt) => {
+      const data = [];
+
+      if (userTimestamps.length > 0) {
+        this.timeChart.setAttribute('style', 'height: 300px');
+        data.push(this.timeRapprHeaders);
+        userTimestamps.forEach(p => {
+          const date = new Date(p.timestamp * 1000);
+          const hours = date.getHours();
+          const minutes = date.getMinutes();
+          data.push(['', date, [hours, minutes, 0], p.userId]);
+        });
+
+        const datatable = new google.visualization.arrayToDataTable(data);
+        cb().draw(datatable, opt);
+      } else {
+        for (let i = 0; i < this.timeChart.childNodes.length; i++) {
+          this.timeChart.removeChild(this.timeChart.childNodes[i]);
+        }
+        this.noPos.appendChild(this.textNoPos);
+        this.timeChart.appendChild(this.noPos);
+        this.timeChart.setAttribute('style', 'height: auto');
+      }
+
+    };
+
+    const callback = () => func(chartFunc, this.optionsTime);
+    google.charts.setOnLoadCallback(callback);
+  }
 }
