@@ -17,7 +17,6 @@ import {Position} from '../../position';
 import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
-import {element} from 'protractor';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -46,6 +45,7 @@ export class BuyComponent implements OnInit {
   positionCount: number;
   markerUserEmpty;
   markerIconBlue;
+  positionsTimestamp: Position[];
   markers: Marker[] = []; // Marker messi nella mappa
 
   // map
@@ -60,8 +60,6 @@ export class BuyComponent implements OnInit {
   dateMax: number;
   dateInitMin = new FormControl(new Date(2018, 4, 25));
   dateInitMax = new FormControl(new Date());
-
-
 
   constructor(private positionService: PositionService,
               public snackBar: MatSnackBar,
@@ -259,6 +257,7 @@ export class BuyComponent implements OnInit {
       }
     });
 
+    this.positionsTimestamp = [];
     this.positionService.polygonPositions = [];
     this.positionService.usersIdRequestList = [];
 
@@ -324,6 +323,13 @@ export class BuyComponent implements OnInit {
           // .getElement().setAttribute('style', 'background-color: ' + temp.markerColor);
           this.map.addLayer(newMarker);
           this.positionCount++;
+        });
+
+        // prendo i dati per il grafico temporale
+        data.reprTimeList.forEach(p => {
+          this.positionsTimestamp.push(
+            new Position(null, null, null, p.tstp, p.userId)
+          );
         });
 
         // aggiungo css solo se ho trovato nuovo utente

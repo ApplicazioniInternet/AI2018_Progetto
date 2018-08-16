@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 
-import { jqxChartComponent } from '../../../../../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxchart';
-import { jqxDropDownListComponent } from '../../../../../node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
+import {Position} from '../../../position';
+declare var google: any;
 
 @Component({
   selector: 'app-graph',
@@ -9,66 +9,59 @@ import { jqxDropDownListComponent } from '../../../../../node_modules/jqwidgets-
   styleUrls: ['./graph.component.css']
 })
 
-export class GraphComponent {
-  @ViewChild('myChart') myChart: jqxChartComponent;
-  @ViewChild('dropDownSerie1Symbol') dropDownSerie1Symbol: jqxDropDownListComponent;
-  @ViewChild('dropDownSerie2Symbol') dropDownSerie2Symbol: jqxDropDownListComponent;
+export class GraphComponent implements OnChanges, OnInit {
+  @Input() userTimestamps: Position[];
+  data: any;
 
-  sampleData: any = [
-    { City: 'New York', SalesQ1: 310500, SalesQ2: 210500, YoYGrowthQ1: 1.05, YoYGrowthQ2: 1.25 },
-    { City: 'London', SalesQ1: 120000, SalesQ2: 169000, YoYGrowthQ1: 1.15, YoYGrowthQ2: 0.95 },
-    { City: 'Paris', SalesQ1: 205000, SalesQ2: 275500, YoYGrowthQ1: 1.45, YoYGrowthQ2: 1.15 },
-    { City: 'Tokyo', SalesQ1: 187000, SalesQ2: 130100, YoYGrowthQ1: 0.45, YoYGrowthQ2: 0.55 },
-    { City: 'Berlin', SalesQ1: 187000, SalesQ2: 113000, YoYGrowthQ1: 1.65, YoYGrowthQ2: 1.05 },
-    { City: 'San Francisco', SalesQ1: 142000, SalesQ2: 102000, YoYGrowthQ1: 0.75, YoYGrowthQ2: 0.15 },
-    { City: 'Chicago', SalesQ1: 171000, SalesQ2: 124000, YoYGrowthQ1: 0.75, YoYGrowthQ2: 0.65 }
-  ];
-
-  padding: any = { left: 5, top: 5, right: 5, bottom: 5 };
-
-  titlePadding: any = { left: 90, top: 0, right: 0, bottom: 10 };
-
-  xAxis: any =
-    {
-      dataField: 'City',
-      valuesOnTicks: false
-    };
-
-  valueAxis: any =
-    {
-      unitInterval: 50000,
-      minValue: 50000,
-      maxValue: 350000,
-      title: { text: 'Sales ($)<br>' },
-      labels: {
-        formatSettings: { prefix: '$', thousandsSeparator: ',' },
-        horizontalAlignment: 'right'
-      }
-    };
-
-  seriesGroups: any[] =
-    [
-      {
-        type: 'bubble',
-        series: [
-          { dataField: 'SalesQ1', radiusDataField: 'YoYGrowthQ1', minRadius: 10, maxRadius: 30, displayText: 'Sales in Q1' },
-          { dataField: 'SalesQ2', radiusDataField: 'YoYGrowthQ2', minRadius: 10, maxRadius: 30, displayText: 'Sales in Q2' }
-        ]
-      }
-    ];
-
-  symbolsList: string[] = ['circle', 'diamond', 'square', 'triangle_up', 'triangle_down', 'triangle_left', 'triangle_right'];
-
-  dropDown1OnChange(event: any) {
-    const value = event.args.item.value;
-    this.myChart.seriesGroups()[0].series[0].symbolType = value;
-    this.myChart.update();
+  constructor() {
+    google.charts.load('current', {'packages': ['corechart']});
   }
 
-  dropDown2OnChange(event: any) {
-    const value = event.args.item.value;
-    this.myChart.seriesGroups()[0].series[1].symbolType = value;
-    this.myChart.update();
+  public BuildChart(): void {
+    const chartFunc = () => new google.visualization.ScatterChart(document.getElementById('timeChart'));
+    const options = {
+      // Trigger tooltips on selections.
+      tooltip: {trigger: 'selection'},
+      // Group selections by x-value.
+      aggregationTarget: 'series',
+      hAxis: {
+        title: 'Giorni',
+        format: 'M/d/yy'
+      },
+      vAxis: {
+        title: 'Ore',
+        format: 'HH:mm'
+      },
+    };
+
+    const func = (cb, opt) => {
+      this.data = new google.visualization.DataTable();
+
+      this.data.addColumn('date', 'Giorno');
+      this.data.addColumn('timeofday', 'Ora');
+
+      if (this.userTimestamps !== undefined ) {
+        this.userTimestamps.forEach(p => {
+          const date = new Date(p.timestamp * 1000);
+          const hours = date.getHours();
+          const minutes = date.getMinutes();
+          this.data.addRows( [[date, [hours, minutes, 0]]] );
+        });
+      }
+
+      cb().draw(this.data, opt);
+    };
+
+    const callback = () => func(chartFunc, options);
+    google.charts.setOnLoadCallback(callback);
+
   }
 
+  ngOnInit() {
+    this.BuildChart();
+  }
+
+  ngOnChanges() {
+    this.BuildChart();
+  }
 }
