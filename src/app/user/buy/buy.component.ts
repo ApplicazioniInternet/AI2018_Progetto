@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation, ɵEMPTY_ARRAY} from '@angular/core';
 import {
   FeatureGroup,
   latLng,
@@ -17,6 +17,7 @@ import {Position} from '../../position';
 import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions} from '@angular/material';
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
+import {forEach} from '@angular/router/src/utils/collection';
 declare var google: any;
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -338,8 +339,21 @@ export class BuyComponent implements OnInit {
           if (flag) {
             userAdded = true;
             temp.markerColor = '';
+            const user: number[] = [0, 0, 0, 0, 0, 0];
+
+            user[0] = (temp.id.charCodeAt(0) + temp.id.charCodeAt(1) * temp.id.charCodeAt(2) * temp.id.charCodeAt(3)) % 16;
+            user[1] = (temp.id.charCodeAt(4) * temp.id.charCodeAt(5) + temp.id.charCodeAt(6) * temp.id.charCodeAt(7)) % 16;
+            user[2] = (temp.id.charCodeAt(8) + temp.id.charCodeAt(9) + temp.id.charCodeAt(10) + temp.id.charCodeAt(11)) % 16;
+            user[3] = (temp.id.charCodeAt(12) * temp.id.charCodeAt(13) * temp.id.charCodeAt(14) * temp.id.charCodeAt(15)) % 16;
+            user[4] = (temp.id.charCodeAt(16) + temp.id.charCodeAt(17) + temp.id.charCodeAt(18) * temp.id.charCodeAt(19)) % 16;
+            user[5] = (temp.id.charCodeAt(20) + temp.id.charCodeAt(21) + temp.id.charCodeAt(22) + temp.id.charCodeAt(23)) % 16;
+
+            console.log(temp);
+            console.log(user);
+
             for (let i = 0; i < 6; i++) {
-              temp.markerColor += this.colorLetters[Math.floor(temp.id.substr(-i, 1).charCodeAt(0) / 16)];
+              temp.markerColor +=
+                  this.colorLetters[(i === 0) ? user[i] : (user[i] + user[i - 1]) % 16];
             }
             this.users.push(temp);
             cssText += '.color-' + temp.markerColor + ' {background-color: #' + temp.markerColor + ';} ';
