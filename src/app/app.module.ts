@@ -21,6 +21,7 @@ import { TokenInterceptor } from './authorization/token.interceptor';
 import { RegisterComponent } from './authorization/register/register.component';
 import { ManageComponent } from './user/manage/manage.component';
 import { CheckoutComponent } from './user/checkout/checkout.component';
+import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
 
 const appRoutes: Routes = [
     { path: 'manage', component: ManageComponent, canActivate: [AuthGuardService] },
@@ -52,6 +53,7 @@ export function tokenGetter() {
     LeafletModule.forRoot(),
     LeafletModule,
     HttpClientModule,
+    AmazingTimePickerModule,
     JwtModule.forRoot({
         config: {
             tokenGetter: tokenGetter,

@@ -144,6 +144,10 @@ mat-form-field {
     width: 40%;
 }
 
+.timepicker {
+    margin: 10px
+}
+
 #timeChart {
     width: 100%;
 }

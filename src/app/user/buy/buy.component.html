@@ -60,19 +60,28 @@
       Filtra per data
     </mat-card-title>
     <div class="container-row">
-      <mat-form-field style="padding-right: 20px;">
-        <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
-               (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
-               (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
+        <div >
+            <mat-form-field style="padding-right: 20px;">
+            <input matInput [matDatepicker]="picker1" placeholder="Scegli data di inizio" [formControl]="dateInitMin"
+                   (dateInput)="updateSalesMin($event)" (dateChange)="updateSalesMin($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+            <mat-form-field>
+                <input matInput type="time" placeholder="Ora inizio" value="{{timeInitMin}}" (click)="udpdateHourMin()">
+            </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field style="padding-right: 20px;">
+            <input matInput [matDatepicker]="picker2" placeholder="Scegli data di fine" [formControl]="dateInitMax"
+                   (dateInput)="updateSalesMax($event)" (dateChange)="updateSalesMax($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+            <mat-form-field>
+                <input matInput type="time" placeholder="Ora fine" value="{{timeInitMax}}" (click)="udpdateHourMax()">
+            </mat-form-field>
+        </div>
     </div>
     <div class="container-row">
       <button mat-mini-fab
@@ -112,5 +121,5 @@
     </button>
 
   </mat-card>
-  
+
 </div>

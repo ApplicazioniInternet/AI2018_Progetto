@@ -18,6 +18,7 @@ import {MatDatepickerInputEvent, MatSnackBar, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTo
 import {ClientHttpService} from '../../client-http.service';
 import {User} from '../../user';
 import {forEach} from '@angular/router/src/utils/collection';
+import {AmazingTimePickerService} from 'amazing-time-picker';
 declare var google: any;
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -62,6 +63,10 @@ export class BuyComponent implements OnInit {
   dateMax: number;
   dateInitMin = new FormControl(new Date(2018, 4, 25));
   dateInitMax = new FormControl(new Date());
+  timeInitMin: string;
+  timeInitMax: string;
+  timeInitMinValue: number;
+  timeInitMaxValue: number;
 
   // rappr temporale
   timeChart;
@@ -72,6 +77,7 @@ export class BuyComponent implements OnInit {
 
   constructor(private positionService: PositionService,
               public snackBar: MatSnackBar,
+              private atp: AmazingTimePickerService,
               private client: ClientHttpService) {}
 
   ngOnInit() {
@@ -96,6 +102,10 @@ export class BuyComponent implements OnInit {
     this.dateMax = new Date(2039, 12, 31).valueOf() / 1000;
     this.positionService.dateMin = this.dateMin;
     this.positionService.dateMax = this.dateMax;
+    this.timeInitMin = '00:00';
+    this.timeInitMax = '00:00';
+    this.timeInitMinValue = 0;
+    this.timeInitMaxValue = 0;
 
     this.options = {
       layers: [this.LAYER_OSM],
@@ -243,6 +253,13 @@ export class BuyComponent implements OnInit {
     ); // top left
   }
 
+  open() {
+    const amazingTimePicker = this.atp.open();
+    amazingTimePicker.afterClose().subscribe(time => {
+      console.log(time);
+    });
+  }
+
   // Funzione per pulire la mappa
   clearMap(): void {
     this.map.eachLayer((layer) => {
@@ -252,14 +269,40 @@ export class BuyComponent implements OnInit {
     });
   }
 
+  udpdateHourMin() {
+    const amazingTimePicker = this.atp.open();
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.timeInitMin = time;
+      this.timeInitMinValue = 0;
+      const a = time.split(':'); // split it at the colons
+
+// minutes are worth 60 seconds. Hours are worth 60 minutes.
+      this.timeInitMinValue = (+a[0]) * 60 * 60 + (+a[1]) * 60;
+      this.positionService.dateMin = this.timeInitMinValue + this.dateMin;
+    });
+  }
+
+  udpdateHourMax() {
+    const amazingTimePicker = this.atp.open();
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.timeInitMax = time;
+      this.timeInitMaxValue = 0;
+      const a = time.split(':'); // split it at the colons
+
+// minutes are worth 60 seconds. Hours are worth 60 minutes.
+      this.timeInitMaxValue = (+a[0]) * 60 * 60 + (+a[1]) * 60;
+      this.positionService.dateMax = this.timeInitMaxValue + this.dateMax;
+    });
+  }
+
   updateSalesMin(date: MatDatepickerInputEvent<Date>) {
     this.dateMin = date.value.valueOf() / 1000;
-    this.positionService.dateMin = this.dateMin;
+    this.positionService.dateMin = this.timeInitMinValue + this.dateMin;
   }
 
   updateSalesMax(date: MatDatepickerInputEvent<Date>) {
     this.dateMax = date.value.valueOf() / 1000;
-    this.positionService.dateMax = this.dateMax;
+    this.positionService.dateMax = this.timeInitMaxValue + this.dateMax;
   }
 
   verifySales() {
@@ -322,7 +365,7 @@ export class BuyComponent implements OnInit {
 
 
     this.client.getBuyablePositions(
-      this.positionService.polygonPositions, this.dateMax, this.dateMin,
+      this.positionService.polygonPositions, this.positionService.dateMax, this.positionService.dateMin,
       this.positionService.usersIdRequestList).subscribe(
       data => {
         this.positionCount = 0;
@@ -347,9 +390,6 @@ export class BuyComponent implements OnInit {
             user[3] = (temp.id.charCodeAt(12) * temp.id.charCodeAt(13) * temp.id.charCodeAt(14) * temp.id.charCodeAt(15)) % 16;
             user[4] = (temp.id.charCodeAt(16) + temp.id.charCodeAt(17) + temp.id.charCodeAt(18) * temp.id.charCodeAt(19)) % 16;
             user[5] = (temp.id.charCodeAt(20) + temp.id.charCodeAt(21) + temp.id.charCodeAt(22) + temp.id.charCodeAt(23)) % 16;
-
-            console.log(temp);
-            console.log(user);
 
             for (let i = 0; i < 6; i++) {
               temp.markerColor +=
@@ -415,7 +455,7 @@ export class BuyComponent implements OnInit {
         }
         this.noPos.appendChild(this.textNoPos);
         this.timeChart.appendChild(this.noPos);
-        this.timeChart.setAttribute('style', 'height: auto');
+        this.timeChart  .setAttribute('style', 'height: auto');
       }
 
     };
